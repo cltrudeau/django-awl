@@ -14,4 +14,4 @@ Installation
 Docs
 ====
 
-Docs available at: *stuff*
+Docs available at: http://django-awl.readthedocs.org/en/latest/

@@ -1,12 +1,14 @@
 import os
 
+VERSION='0.1.0'
+
 readme = os.path.join(os.path.dirname(__file__), 'README.rst')
 long_description = open(readme).read()
 
 
 SETUP_ARGS = dict(
     name='django-awl',
-    version='0.1.0',
+    version=VERSION,
     description='Miscellaneous django tools',
     long_description=long_description,
     url='https://github.com/cltrudeau/django-awl',

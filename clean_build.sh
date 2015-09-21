@@ -1,6 +1,10 @@
 #!/bin/bash
 
-git tag `grep "version" setup.py | cut -d "'" -f 2`
+git tag `grep "VERSION=" setup.py | cut -d "'" -f 2`
+
+if [ "$?" != "0" ] ; then
+    exit $?
+fi
 
 rm -rf build
 rm -rf dist
