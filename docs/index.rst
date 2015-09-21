@@ -8,6 +8,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   admintools
    models
    waelsteng
    ranked

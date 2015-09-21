@@ -1,18 +1,36 @@
-from django.contrib import admin
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 
 # ============================================================================
-# Models used by tests
+# Waelsteng Models
+# ============================================================================
 
 class Link(models.Model):
     url = models.CharField(max_length=80)
     text = models.CharField(max_length=80)
 
 # ============================================================================
-# Admin Models for tests
+# Admintools Models 
+# ============================================================================
 
-class LinkAdmin(admin.ModelAdmin):
-    list_display = ('url', 'text', 'visit_me')
+@python_2_unicode_compatible
+class Nested(models.Model):
+    name = models.CharField(max_length=10)
 
-    def visit_me(self, obj):
-        return '<a href="%s">%s</a>' % (obj.url, obj.text)
+    def __str__(self):
+        return 'Nested(id=%s %s)' % (self.id, self.name)
+
+
+@python_2_unicode_compatible
+class Inner(models.Model):
+    name = models.CharField(max_length=10)
+    nested = models.ForeignKey(Nested)
+
+    def __str__(self):
+        return 'Inner(id=%s %s)' % (self.id, self.name)
+
+
+@python_2_unicode_compatible
+class Outer(models.Model):
+    name = models.CharField(max_length=10)
+    inner = models.ForeignKey(Inner)

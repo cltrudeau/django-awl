@@ -54,5 +54,5 @@ of your inheriting class.
         move_down.short_description = 'Move Up Rank'
 
 
-.. automodule:: awl.rankedmodel.admin
+.. automodule:: awl.rankedmodel.admintools
     :members:

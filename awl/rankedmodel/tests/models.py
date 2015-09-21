@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db import models
 
-from awl.rankedmodel.admin import admin_link_move_up, admin_link_move_down
+from awl.rankedmodel.admintools import admin_link_move_up, admin_link_move_down
 from awl.rankedmodel.models import RankedModel
 
 # ============================================================================

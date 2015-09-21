@@ -2,7 +2,8 @@ from django.test import TestCase
 
 from awl.waelsteng import AdminToolsMixin
 
-from awl.tests.models import Link, LinkAdmin
+from awl.tests.admin import LinkAdmin
+from awl.tests.models import Link
 
 # ============================================================================
 
@@ -32,3 +33,7 @@ class AdminMixinTest(TestCase, AdminToolsMixin):
 
         # test before get, to check that auth call worked
         self.authed_post('/admin/', {})
+
+# ============================================================================
+
+

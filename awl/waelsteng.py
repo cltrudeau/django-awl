@@ -1,14 +1,63 @@
+import logging
+
 from django.contrib import admin
 from django.contrib.admin.utils import lookup_field
 from django.contrib.auth.models import User
+from django.test import TestCase
 
 from six.moves.html_parser import HTMLParser
 
 # ============================================================================
+# View Testing Tools
+# ============================================================================
 
 class FakeRequest(object):
-    pass
+    """Simulates a request object"""
+    def __init__(self, user=None, method='GET', cookies={}, data={}):
+        """Constructor
 
+        :param user:
+            Django User object to include in the request.  Defaults to None.
+            If none is given then the parameter is not set at all
+        :param method:
+            Request method.  Defaults to 'GET'
+        :param cookies:
+            Dict containing cookies for the request.  Defaults to empty
+        :param data:
+            Dict for get or post fields.  Defaults to empty
+        """
+        super(FakeRequest, self).__init__()
+        self.method = method
+        self.COOKIES = cookies
+        if user:
+            self.user = user
+        if method == 'GET':
+            self.GET = data
+        else:
+            self.POST = data
+
+
+def create_admin(username='admin', email='admin@admin.com', password='admin'):
+    """Create and save an admin user.
+
+    :param username:
+        Admin account's username.  Defaults to 'admin'
+    :param email:
+        Admin account's email address.  Defaults to 'admin@admin.com'
+    :param password:
+        Admin account's password.  Defaults to 'admin'
+    :returns:
+        Django user with staff and superuser privileges
+    """
+    admin = User.objects.create_user(username, email, password)
+    admin.is_staff = True
+    admin.is_superuser = True
+    admin.save()
+    return admin
+
+# ============================================================================
+# Tools for testing Django Admin Modules
+# ============================================================================
 
 class AnchorParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
@@ -18,7 +67,6 @@ class AnchorParser(HTMLParser):
                 self.href = attr[1]
                 break
 
-# ============================================================================
 
 class AdminToolsMixin(object):
     """This mixin is used to help test django admin objects using the django
@@ -51,11 +99,7 @@ class AdminToolsMixin(object):
         :class:`TestCase.setUp` method.
         """
         self.site = admin.sites.AdminSite()
-        self.admin_user = User.objects.create_user(self.USERNAME, self.EMAIL,
-            self.PASSWORD)
-        self.admin_user.is_staff = True
-        self.admin_user.is_superuser = True
-        self.admin_user.save()
+        self.admin_user = create_admin(self.USERNAME, self.EMAIL, self.PASSWORD)
         self.authed = False
 
     def authorize(self):
@@ -173,6 +217,5 @@ class AdminToolsMixin(object):
         :returns:
             List of field names
         """
-        request = FakeRequest()
-        request.user = self.admin_user
+        request = FakeRequest(user=self.admin_user)
         return admin_model.get_list_display(request)
