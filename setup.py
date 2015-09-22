@@ -29,6 +29,7 @@ SETUP_ARGS = dict(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     keywords='django,state machine',
+    test_suite="tests.run_tests",
     install_requires=[
         'Django>=1.7',
         'wrench>=0.3.0',

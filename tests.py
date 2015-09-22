@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-
 import sys
 import django
+from unittest import TestSuite
 
 from django.conf import settings
+from django.test import SimpleTestCase
 from django.test.runner import DiscoverRunner
 
 settings.configure(DEBUG=True,
@@ -28,26 +29,24 @@ settings.configure(DEBUG=True,
         'awl',
     ),
 )
-
-labels = ['awl.tests', 'awl.rankedmodel.tests']
-if len(sys.argv[1:]) > 0:
-    labels = sys.argv[1:]
-
 django.setup()
 
-#from awl.waelsteng import WRunner
-#from wrench.waelstow import list_tests
-#runner = WRunner()
-#suite = runner.build_suite(labels)
-#for t in list_tests(suite):
-#    print(t)
-#
-#quit()
+default_labels = ['awl.tests', 'awl.rankedmodel.tests']
 
-#runner = DiscoverRunner(verbosity=1)
+def run_tests(labels=default_labels):
+    from awl.waelsteng import WRunner
+    runner = WRunner(verbosity=1)
+    failures = runner.run_tests(labels)
+    if failures:
+        sys.exit(failures)
 
-from awl.waelsteng import WRunner
-runner = WRunner(verbosity=1)
-failures = runner.run_tests(labels)
-if failures:
-    sys.exit(failures)
+    # in case this is called from setup tools, return a test suite
+    return TestSuite()
+
+
+if __name__ == '__main__':
+    labels = default_labels
+    if len(sys.argv[1:]) > 0:
+        labels = sys.argv[1:]
+
+    run_tests(labels)
