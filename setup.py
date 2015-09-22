@@ -31,6 +31,7 @@ SETUP_ARGS = dict(
     keywords='django,state machine',
     install_requires=[
         'Django>=1.7',
+        'wrench>=0.3.0',
     ],
 )
 

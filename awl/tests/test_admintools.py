@@ -1,12 +1,10 @@
 # awl.tests.test_admintools.py
 from django.test import TestCase
-from django.http import Http404
 from django.contrib.admin.utils import label_for_field
 
 from six.moves.html_parser import HTMLParser
 
-from awl.utils import URLTree
-from awl.waelsteng import FakeRequest, AdminToolsMixin
+from awl.waelsteng import AdminToolsMixin
 from awl.tests.models import Nested, Inner, Outer
 from awl.tests.admin import InnerAdmin, OuterAdmin
 

@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.test import TestCase
 
 from awl.rankedmodel.tests.models import Alone, Grouped, RankAdmin

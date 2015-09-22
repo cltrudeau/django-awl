@@ -1,11 +1,22 @@
-import logging
+# awl.waelsteng.py
+#
+# DOCUMENTATION ALERT: autodoc is explicit about what is included in this
+# module in order to handle some better grouping of items.  New things will
+# need to be explicitly added to docs/waelsteng.rst
+#
+import os, shutil
+from unittest import TestSuite
 
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.utils import lookup_field
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test.runner import DiscoverRunner, reorder_suite
 
 from six.moves.html_parser import HTMLParser
+
+from wrench.utils import dynamic_load
+from wrench.waelstow import find_shortcut_tests
 
 # ============================================================================
 # View Testing Tools
@@ -219,3 +230,70 @@ class AdminToolsMixin(object):
         """
         request = FakeRequest(user=self.admin_user)
         return admin_model.get_list_display(request)
+
+# ============================================================================
+# Alternate Runner
+# ============================================================================
+
+class WRunner(DiscoverRunner):
+    # documentation for this is directly in waelsteng.rst
+    def __init__(self, **kwargs):
+        if 'verbosity' not in kwargs:
+            kwargs['verbosity'] = 2
+
+        w_settings = getattr(settings, 'WRUNNER', {})
+        self.test_media_root = w_settings.get('MEDIA_ROOT', '')
+        self.test_data = w_settings.get('TEST_DATA', '')
+
+        super(WRunner, self).__init__(**kwargs)
+
+    def setup_test_environment(self, **kwargs):
+        super(WRunner, self).setup_test_environment(**kwargs)
+        settings.STATICFILES_STORAGE = \
+            'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+        if self.test_media_root:
+            settings.MEDIA_ROOT = self.test_media_root
+            try:
+                os.makedirs(self.test_media_root)
+            except:
+                pass # ignore errors if directory existed
+
+    def setup_databases(self, **kwargs):
+        result = super(WRunner, self).setup_databases(**kwargs)
+
+        if self.test_data:
+            data_fn = dynamic_load(self.test_data)
+            data_fn()
+
+        return result
+
+    def teardown_databases(self, old_config, **kwargs):
+        super(WRunner, self).teardown_databases(old_config, **kwargs)
+        if self.test_media_root:
+            shutil.rmtree(self.test_media_root)
+
+    def build_suite(self, test_labels, extra_tests=None, **kwargs):
+        shortcut_labels = []
+        full_labels = []
+        for label in test_labels:
+            if label.startswith('='):
+                shortcut_labels.append(label)
+            else:
+                full_labels.append(label)
+
+        shortcut_tests = []
+        if shortcut_labels:
+            suite = super(WRunner, self).build_suite([], extra_tests, **kwargs)
+            shortcut_tests = find_shortcut_tests(suite, shortcut_labels)
+
+        if full_labels:
+            suite = super(WRunner, self).build_suite(full_labels, extra_tests,
+                **kwargs)
+            suite.addTests(shortcut_tests)
+        else:
+            # only have shortcut labels
+            suite = TestSuite(shortcut_tests)
+
+        # parent implementation reorders, so we'll do it too
+        return reorder_suite(suite, self.reorder_by)

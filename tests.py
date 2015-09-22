@@ -34,7 +34,20 @@ if len(sys.argv[1:]) > 0:
     labels = sys.argv[1:]
 
 django.setup()
-runner = DiscoverRunner(verbosity=1)
+
+#from awl.waelsteng import WRunner
+#from wrench.waelstow import list_tests
+#runner = WRunner()
+#suite = runner.build_suite(labels)
+#for t in list_tests(suite):
+#    print(t)
+#
+#quit()
+
+#runner = DiscoverRunner(verbosity=1)
+
+from awl.waelsteng import WRunner
+runner = WRunner(verbosity=1)
 failures = runner.run_tests(labels)
 if failures:
     sys.exit(failures)

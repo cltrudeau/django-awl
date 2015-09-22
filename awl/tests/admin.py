@@ -7,6 +7,7 @@ from awl.admintools import make_admin_obj_mixin
 # Waelsteng Admin Models
 # ============================================================================
 
+@admin.register(Link)
 class LinkAdmin(admin.ModelAdmin):
     list_display = ('url', 'text', 'visit_me')
 
