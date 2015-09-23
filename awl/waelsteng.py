@@ -47,6 +47,11 @@ class FakeRequest(object):
         else:
             self.POST = data
 
+        self.path = '/fake/path/'
+
+    def get_host(self):
+        return 'test_host'
+
 
 def create_admin(username='admin', email='admin@admin.com', password='admin'):
     """Create and save an admin user.
