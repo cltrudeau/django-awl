@@ -10,6 +10,7 @@ Testing Django Views
 --------------------
 
 .. automodule:: awl.waelsteng
+    :noindex:
     :members: FakeRequest
 
 

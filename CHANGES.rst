@@ -1,3 +1,8 @@
+0.3
+===
+
+* added context processor extra_context
+
 0.2
 ===
 

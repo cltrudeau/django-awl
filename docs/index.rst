@@ -9,7 +9,10 @@ Contents
    :maxdepth: 2
 
    admintools
+   context
+   decorators
    models
+   utils
    waelsteng
    ranked
 
