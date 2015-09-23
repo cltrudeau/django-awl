@@ -33,7 +33,7 @@ django.setup()
 
 default_labels = ['awl.tests', 'awl.rankedmodel.tests']
 
-def run_tests(labels=default_labels):
+def get_suite(labels=default_labels):
     from awl.waelsteng import WRunner
     runner = WRunner(verbosity=1)
     failures = runner.run_tests(labels)
