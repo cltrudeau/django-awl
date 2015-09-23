@@ -49,4 +49,4 @@ if __name__ == '__main__':
     if len(sys.argv[1:]) > 0:
         labels = sys.argv[1:]
 
-    run_tests(labels)
+    get_suite(labels)

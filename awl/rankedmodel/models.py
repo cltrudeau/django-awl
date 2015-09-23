@@ -109,7 +109,7 @@ class RankedModel(models.Model):
             item.save(rerank=False)
 
     @transaction.atomic
-    def save(self, *args, rerank=True, **kwargs):
+    def save(self, *args, **kwargs):
         """Overridden method that handles that re-ranking of objects and the
         integrity of the ``rank`` field.
 
@@ -117,6 +117,7 @@ class RankedModel(models.Model):
             Added parameter, if True will rerank other objects based on the
             change in this save.  Defaults to True.  
         """
+        rerank = kwargs.pop('rerank', True)
         if rerank:
             if not self.id:
                 self._process_new_rank_obj()

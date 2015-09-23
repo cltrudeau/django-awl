@@ -30,7 +30,6 @@ class Inner(models.Model):
         return 'Inner(id=%s %s)' % (self.id, self.name)
 
 
-@python_2_unicode_compatible
 class Outer(models.Model):
     name = models.CharField(max_length=10)
     inner = models.ForeignKey(Inner)
