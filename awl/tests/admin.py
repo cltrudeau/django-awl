@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from awl.tests.models import Link, Inner, Outer, Nested
 from awl.admintools import make_admin_obj_mixin
+from awl.tests.models import Link, Inner, Outer, Nested
+from awl.rankedmodel.admintools import admin_link_move_up, admin_link_move_down
 
 # ============================================================================
 # Waelsteng Admin Models
@@ -38,3 +39,20 @@ base.add_obj_link('show_inner', 'inner', 'My Inner', 'Inner.id={{obj.id}}')
 @admin.register(Outer)
 class OuterAdmin(admin.ModelAdmin, base):
     list_display = ('name', 'show_inner', 'show_nested')
+
+# ============================================================================
+# RankedModel Admin Models
+# ============================================================================
+
+class RankAdmin(admin.ModelAdmin):
+    list_display = ('name', 'move_up', 'move_down')
+
+    def move_up(self, obj):
+        return admin_link_move_up(obj)
+    move_up.allow_tags = True
+    move_up.short_description = 'Move Up Rank'
+
+    def move_down(self, obj):
+        return admin_link_move_down(obj)
+    move_down.allow_tags = True
+    move_down.short_description = 'Move Up Rank'

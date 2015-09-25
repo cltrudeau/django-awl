@@ -1,5 +1,30 @@
 # awl.utils.py
 
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.template.loader import render_to_string
+
+# =============================================================================
+# Template Methods
+# =============================================================================
+
+def render_page(request, page_name, data={}):
+    """A shortcut for using ``render_to_response` with a
+    :class:`RequestContext` automatically.
+    """
+    return render_to_response(page_name, data,
+        context_instance=RequestContext(request))
+
+
+def render_page_to_string(request, page_name, data={}):
+    """A shortcut for using ``render_to_string` with a
+    :class:`RequestContext` automatically.
+    """
+    return render_to_string(page_name, data,
+        context_instance=RequestContext(request))
+
+# ============================================================================
+# Object Model Tools
 # ============================================================================
 
 def refetch(obj):
@@ -15,6 +40,20 @@ def refetch(obj):
     return obj.__class__.objects.get(id=obj.id)
 
 
+def refetch_for_update(obj):
+    """Queries the database for the same object that is passed in, refetching
+    its contents and runs ``select_for_update()`` to lock the corresponding
+    row until the next commit.
+
+    :param obj:
+        Object to refetch
+    :returns:
+        Refreshed version of the object
+    """
+    return obj.__class__.objects.select_for_update().get(id=obj.id)
+
+# ============================================================================
+# Misc
 # ============================================================================
 
 class URLTree(object):

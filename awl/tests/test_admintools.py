@@ -39,21 +39,21 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         parser = AnchorParser()
         parser.feed(html)
         self.assertEqual('Nested(id=1 n1)', parser.link_text)
-        self.assertEqual('/admin/awl/nested/?id__exact=1', parser.href)
+        self.assertEqual('/admin/tests/nested/?id__exact=1', parser.href)
 
         # check the template based name link of Inner from Outer
         html = self.field_value(outer_admin, o1, 'show_inner')
         parser = AnchorParser()
         parser.feed(html)
         self.assertEqual('Inner.id=1', parser.link_text)
-        self.assertEqual('/admin/awl/inner/?id__exact=1', parser.href)
+        self.assertEqual('/admin/tests/inner/?id__exact=1', parser.href)
 
         # check the double dereferenced Nested from Outer
         html = self.field_value(outer_admin, o1, 'show_nested')
         parser = AnchorParser()
         parser.feed(html)
         self.assertEqual('Nested(id=1 n1)', parser.link_text)
-        self.assertEqual('/admin/awl/nested/?id__exact=1', parser.href)
+        self.assertEqual('/admin/tests/nested/?id__exact=1', parser.href)
 
         # check the title got set correctly
         label = label_for_field('show_inner', o1, outer_admin)

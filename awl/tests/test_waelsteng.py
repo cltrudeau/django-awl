@@ -84,19 +84,19 @@ class WRunnerTest(TestCase):
 
         # -- test various labels work
         expected = [
-            'test_same_order (awl.rankedmodel.tests.test_ranked.GroupedTests)',
-            'test_same_order (awl.rankedmodel.tests.test_ranked.AloneTests)',
-            'test_too_large (awl.rankedmodel.tests.test_ranked.GroupedTests)',
+            'test_same_order (awl.tests.test_ranked.GroupedTests)',
+            'test_same_order (awl.tests.test_ranked.AloneTests)',
+            'test_too_large (awl.tests.test_ranked.GroupedTests)',
         ]
         suite = runner.build_suite([
-            'awl.rankedmodel.tests.test_ranked.GroupedTests.test_too_large',
+            'awl.tests.test_ranked.GroupedTests.test_too_large',
             '=_same_order'])
         self.assert_test_strings(expected, suite)
 
         # shortcuts only
         expected = [
-            'test_same_order (awl.rankedmodel.tests.test_ranked.GroupedTests)',
-            'test_same_order (awl.rankedmodel.tests.test_ranked.AloneTests)',
+            'test_same_order (awl.tests.test_ranked.GroupedTests)',
+            'test_same_order (awl.tests.test_ranked.AloneTests)',
         ]
         suite = runner.build_suite(['=_same_order'])
         self.assert_test_strings(expected, suite)

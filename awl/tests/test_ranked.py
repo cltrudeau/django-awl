@@ -1,6 +1,8 @@
 from django.test import TestCase
 
-from awl.rankedmodel.tests.models import Alone, Grouped, RankAdmin
+from awl.tests.admin import RankAdmin
+from awl.tests.models import Alone, Grouped
+
 from awl.waelsteng import AdminToolsMixin
 from awl.utils import refetch
 
