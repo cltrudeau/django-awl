@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 # =============================================================================
 
 def render_page(request, page_name, data={}):
-    """A shortcut for using ``render_to_response` with a
+    """A shortcut for using ``render_to_response`` with a
     :class:`RequestContext` automatically.
     """
     return render_to_response(page_name, data,
@@ -17,7 +17,7 @@ def render_page(request, page_name, data={}):
 
 
 def render_page_to_string(request, page_name, data={}):
-    """A shortcut for using ``render_to_string` with a
+    """A shortcut for using ``render_to_string`` with a
     :class:`RequestContext` automatically.
     """
     return render_to_string(page_name, data,
