@@ -1,3 +1,18 @@
+0.4
+===
+
+* added utilities:
+    * refetch_for_update
+    * render_page
+    * render_page_to_string
+* added model classes:
+    * Counter
+    * Lock
+* added model abstract class:
+    * ValidatingMixin
+* re-ogranized testing structure to deal with migrations needed from the
+    addition of the new concrete model classes 
+
 0.3
 ===
 
