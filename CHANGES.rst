@@ -1,3 +1,9 @@
+0.5
+===
+
+* django version of default_logging_dict
+* fixed bug in WRunner where empty test labels did not return all tests
+
 0.4
 ===
 
