@@ -101,6 +101,10 @@ class WRunnerTest(TestCase):
         suite = runner.build_suite(['=_same_order'])
         self.assert_test_strings(expected, suite)
 
+        # test no labels at all
+        suite = runner.build_suite([])
+        self.assertTrue(list(suite))
+
         # -- check media root cleanup
         runner.teardown_databases(old_config=([], []))
         self.assertFalse(os.path.exists(self.media_dir))

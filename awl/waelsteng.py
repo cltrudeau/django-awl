@@ -296,9 +296,12 @@ class WRunner(DiscoverRunner):
             suite = super(WRunner, self).build_suite(full_labels, extra_tests,
                 **kwargs)
             suite.addTests(shortcut_tests)
-        else:
+        elif shortcut_tests:
             # only have shortcut labels
             suite = TestSuite(shortcut_tests)
+        else:
+            # no labels at all, do the default
+            suite = super(WRunner, self).build_suite([], extra_tests, **kwargs)
 
         # parent implementation reorders, so we'll do it too
         return reorder_suite(suite, self.reorder_by)
