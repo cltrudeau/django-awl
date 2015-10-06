@@ -132,7 +132,7 @@ def make_admin_obj_mixin(name):
                 link_name = str(field_obj)
             else:
                 template = Template(_display)
-                context = Context({'obj':obj})
+                context = Context({'obj':field_obj})
                 link_name = template.render(context)
 
             return admin_obj_link(field_obj, link_name)

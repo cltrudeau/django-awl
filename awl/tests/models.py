@@ -40,6 +40,10 @@ class Inner(models.Model):
     def __str__(self):
         return 'Inner(id=%s %s)' % (self.id, self.name)
 
+    @property
+    def classname(self):
+        return 'Inner'
+
 
 class Outer(models.Model):
     name = models.CharField(max_length=10)

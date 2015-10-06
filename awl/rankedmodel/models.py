@@ -26,7 +26,8 @@ class RankedModel(models.Model):
     the django admin.  To use the functions, add columns to your admin
     instances of the inheriting class::
 
-        from awl.admin import admin_link_move_up, admin_link_move_down
+        from awl.rankedmodel.admintools import (admin_link_move_up, 
+            admin_link_move_down)
 
         @admin.register(Favourites)
         class FavouritesAdmin(admin.ModelAdmin):
@@ -40,7 +41,7 @@ class RankedModel(models.Model):
             def move_down(self, obj):
                 return admin_link_move_down(obj)
             move_down.allow_tags = True
-            move_down.short_description = 'Move Up Rank'
+            move_down.short_description = 'Move Down Rank'
 
     :param rank:
         Ranked order of object

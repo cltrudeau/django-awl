@@ -34,7 +34,8 @@ class InnerAdmin(admin.ModelAdmin, base):
 
 base = make_admin_obj_mixin('OuterMixin')
 base.add_obj_link('show_nested', 'inner__nested')
-base.add_obj_link('show_inner', 'inner', 'My Inner', 'Inner.id={{obj.id}}')
+base.add_obj_link('show_inner', 'inner', 'My Inner', 
+    '{{obj.classname}}.id={{obj.id}}')
 
 @admin.register(Outer)
 class OuterAdmin(admin.ModelAdmin, base):
