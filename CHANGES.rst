@@ -1,3 +1,8 @@
+0.5.2
+=====
+
+* internal change from AnchorParser to wrench.utils.parse_link
+
 0.5.1
 =====
 
