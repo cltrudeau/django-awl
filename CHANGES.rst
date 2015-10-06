@@ -1,3 +1,9 @@
+0.5.1
+=====
+
+* fixed documentation errors in rankedmodels
+* fixed bug where the wrong obj was being shown in the admin_obj_link
+
 0.5
 ===
 
