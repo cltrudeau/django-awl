@@ -13,9 +13,7 @@ from django.contrib.admin.utils import lookup_field
 from django.contrib.auth.models import User
 from django.test.runner import DiscoverRunner, reorder_suite
 
-from six.moves.html_parser import HTMLParser
-
-from wrench.utils import dynamic_load
+from wrench.utils import dynamic_load, parse_link
 from wrench.waelstow import find_shortcut_tests
 
 # ============================================================================
@@ -74,15 +72,6 @@ def create_admin(username='admin', email='admin@admin.com', password='admin'):
 # ============================================================================
 # Tools for testing Django Admin Modules
 # ============================================================================
-
-class AnchorParser(HTMLParser):
-    def handle_starttag(self, tag, attrs):
-        self.href = ''
-        for attr in attrs:
-            if attr[0] == 'href':
-                self.href = attr[1]
-                break
-
 
 class AdminToolsMixin(object):
     """This mixin is used to help test django admin objects using the django
@@ -196,13 +185,8 @@ class AdminToolsMixin(object):
             If the column does not contain a URL that can be parsed
         """
         html = self.field_value(admin_model, instance, field_name)
-        try:
-            parser = AnchorParser()
-            parser.feed(html)
-            url = parser.href
-            if not url:
-                raise AttributeError()
-        except:
+        url, text = parse_link(html)
+        if not url:
             raise AttributeError('href could not be parsed from *%s*' % html)
 
         return self.authed_get(url, response_code=response_code,
