@@ -122,6 +122,8 @@ def make_admin_obj_mixin(name):
             # handle '__' referencing like in QuerySets
             fields = attr.split('__')
             field_obj = getattr(obj, fields[0])
+            if not field_obj:
+                return ''
 
             for field in fields[1:]:
                 # keep going down the reference tree

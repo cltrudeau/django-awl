@@ -35,7 +35,7 @@ class Nested(models.Model):
 @python_2_unicode_compatible
 class Inner(models.Model):
     name = models.CharField(max_length=10)
-    nested = models.ForeignKey(Nested)
+    nested = models.ForeignKey(Nested, null=True, blank=True)
 
     def __str__(self):
         return 'Inner(id=%s %s)' % (self.id, self.name)

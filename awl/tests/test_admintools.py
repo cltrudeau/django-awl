@@ -45,6 +45,12 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         self.assertEqual(label, 'My Inner')
 
         # check that empty values work properly
-        o2 = Outer.objects.create(name='o1')
+        o2 = Outer.objects.create(name='o2')
+        result = self.field_value(outer_admin, o2, 'show_nested')
+        self.assertEqual('', result)
+
+        i2 = Inner.objects.create(name='i2')
+        o2.inner = i2
+        o2.save()
         result = self.field_value(outer_admin, o2, 'show_nested')
         self.assertEqual('', result)

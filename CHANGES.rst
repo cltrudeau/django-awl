@@ -1,3 +1,8 @@
+0.6.1
+=====
+
+* yet another make_admin_obj_mixin null bug, yay! for testing
+
 0.6
 ===
 
