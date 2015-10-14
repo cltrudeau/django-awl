@@ -1,6 +1,7 @@
-0.5.2
-=====
+0.6
+===
 
+* removed django 1.7 compatibility
 * internal change from AnchorParser to wrench.utils.parse_link
 * fixed bug where make_admin_obj_mixin wasn't handling null FK properly
 

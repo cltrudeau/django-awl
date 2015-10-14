@@ -17,6 +17,7 @@ debug.log
 db.sqlite3
 logs/*
 *.egg
+*.eggs
 *.egg-info
 build/
 dist/
