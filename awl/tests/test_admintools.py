@@ -43,3 +43,8 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         # check the title got set correctly
         label = label_for_field('show_inner', o1, outer_admin)
         self.assertEqual(label, 'My Inner')
+
+        # check that empty values work properly
+        o2 = Outer.objects.create(name='o1')
+        result = self.field_value(outer_admin, o2, 'show_nested')
+        self.assertEqual('', result)

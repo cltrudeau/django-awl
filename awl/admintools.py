@@ -125,7 +125,9 @@ def make_admin_obj_mixin(name):
 
             for field in fields[1:]:
                 # keep going down the reference tree
-                field_obj = getattr(field_obj, field)
+                field_obj = getattr(field_obj, field, None)
+                if not field_obj:
+                    return ''
 
             link_name = ''
             if not _display:

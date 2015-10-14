@@ -47,7 +47,7 @@ class Inner(models.Model):
 
 class Outer(models.Model):
     name = models.CharField(max_length=10)
-    inner = models.ForeignKey(Inner)
+    inner = models.ForeignKey(Inner, null=True, blank=True)
 
 # ============================================================================
 # RankedModel Models 
