@@ -1,7 +1,6 @@
 # awl.tests.test_utils.py
 import sys
 from django.test import TestCase
-from django.http import HttpResponse
 
 from six import StringIO
 

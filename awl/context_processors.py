@@ -1,8 +1,6 @@
 # awl.context_processors.py
 import os
 
-from django.conf import settings
-
 def extra_context(request):
     """Adds useful global items to the context for use in templates.
 

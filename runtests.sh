@@ -8,4 +8,5 @@ if [ "$?" = "0" ]; then
     coverage report
     echo -e "\nrun \"coverage html\" for full report"
     echo -e "\n"
+    ./pyflakes.sh
 fi
