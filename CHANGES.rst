@@ -1,3 +1,8 @@
+0.8
+===
+
+* added accessor templatetag
+
 0.7
 ===
 

@@ -1,12 +1,11 @@
 # awl.tests.test_tags.py
 
-from django.template import Context, Template
+from django.template import Context, Template, TemplateSyntaxError
 from django.test import TestCase
 
 # ============================================================================
 
 class TagTests(TestCase):
-
     def test_getitem(self):
         t = """
         {% load awltags %}
@@ -23,3 +22,53 @@ class TagTests(TestCase):
         context = Context(data)
         result = template.render(context)
         self.assertEqual('bar', result.strip())
+
+    def test_accessor(self):
+        class Dummy(object):
+            pass
+
+        d = Dummy()
+        d.one = Dummy()
+        d.one.two = {
+            'three': {
+                'four': 'five',
+            }
+        }
+
+        context_data = {
+            'myobj':d,
+            'attr1':'one',
+            'key1':'three',
+        }
+
+        t = """
+        {% load awltags %}
+        
+        {% accessor myobj attr1 'two' [key1] ['four'] %}
+        """
+
+        template = Template(t)
+        context = Context(context_data)
+        result = template.render(context)
+        self.assertEqual('five', result.strip())
+
+        # -- test failure modes
+
+        # test no attributes
+        with self.assertRaises(TemplateSyntaxError):
+            t = """
+            {% load awltags %}
+            
+            {% accessor %}
+            """
+
+            template = Template(t)
+
+        # test 1 attribute
+        with self.assertRaises(TemplateSyntaxError):
+            t = """
+            {% load awltags %}
+            
+            {% accessor myobj %}
+            """
+            template = Template(t)
