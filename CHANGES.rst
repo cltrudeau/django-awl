@@ -1,7 +1,8 @@
-?
-=====
+0.7
+===
 
 * removed unused imports
+* added getitem templatetag
 
 0.6.1
 =====

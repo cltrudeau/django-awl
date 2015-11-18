@@ -12,9 +12,10 @@ Contents
    context
    decorators
    models
+   ranked
+   tags
    utils
    waelsteng
-   ranked
 
 
 Indices and tables
