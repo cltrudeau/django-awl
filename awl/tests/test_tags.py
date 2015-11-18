@@ -23,6 +23,12 @@ class TagTests(TestCase):
         result = template.render(context)
         self.assertEqual('bar', result.strip())
 
+        # -- test bad key
+        data['key'] = 'missing'
+        context = Context(data)
+        result = template.render(context)
+        self.assertEqual('', result.strip())
+
     def test_accessor(self):
         class Dummy(object):
             pass

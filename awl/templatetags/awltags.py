@@ -26,8 +26,14 @@ def getitem(dictionary, keyvar):
 
         >>> result
         'bar'
+
+    .. note::
+        Any KeyErrors are ignored silently
     """
-    return dictionary[keyvar]
+    try:
+        return dictionary[keyvar]
+    except KeyError:
+        return ''
 
 
 @register.tag

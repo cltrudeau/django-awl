@@ -1,3 +1,8 @@
+0.8.2
+======
+
+* fixed getitem template filter so that it handles key errors silently
+
 0.8.1
 ======
 
@@ -12,7 +17,7 @@
 ===
 
 * removed unused imports
-* added getitem templatetag
+* added getitem template filter
 
 0.6.1
 =====
