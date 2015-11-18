@@ -52,6 +52,18 @@ class TagTests(TestCase):
         result = template.render(context)
         self.assertEqual('five', result.strip())
 
+        # -- test "as" functionality
+        t = """
+        {% load awltags %}
+        
+        {% accessor myobj attr1 'two' [key1] ['four'] as thing %}
+        """
+        template = Template(t)
+        context = Context(context_data)
+        result = template.render(context)
+        self.assertEqual('', result.strip())
+        self.assertEqual('five', context['thing'])
+
         # -- test failure modes
 
         # test no attributes

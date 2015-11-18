@@ -56,6 +56,11 @@ def accessor(parser, token):
         ref = getattr(ref, 'front_seat')
         ref = ref[position]
         return ref['fabric']
+
+    This tag also supports "as" syntax, putting the results into a template
+    variable::
+
+        {% accessor car 'interior' as foo %}
     """
     contents = token.split_contents()
     tag = contents[0]
@@ -63,13 +68,21 @@ def accessor(parser, token):
         raise template.TemplateSyntaxError(('%s requires at least two '
             'arguments: object and one or more getattr parms') % tag)
 
-    return AccessorNode(contents[1], contents[2:])
+    as_var = None
+    if len(contents) >= 4:
+        # check for "as" syntax
+        if contents[-2] == 'as':
+            as_var = contents[-1]
+            contents = contents[:-2]
+
+    return AccessorNode(contents[1], contents[2:], as_var)
 
 
 class AccessorNode(template.Node):
-    def __init__(self, obj_name, parms):
+    def __init__(self, obj_name, parms, as_var):
         self.obj_name = obj_name
         self.parms = parms
+        self.as_var = as_var
 
     def render(self, context):
         ref = context[self.obj_name]
@@ -90,5 +103,9 @@ class AccessorNode(template.Node):
                 # parm is a template var
                 attr = context[parm]
                 ref = getattr(ref, attr)
+
+        if self.as_var:
+            context[self.as_var] = ref
+            return ''
 
         return ref

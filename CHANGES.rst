@@ -1,3 +1,8 @@
+0.8.1
+======
+
+* added "as" syntax to accessor templatetag
+
 0.8
 ===
 
