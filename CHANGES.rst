@@ -1,3 +1,8 @@
+0.9
+===
+
+* added css_colours module, tests for values that are valid CSS colours
+
 0.8.2
 ======
 

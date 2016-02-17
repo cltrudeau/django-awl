@@ -10,6 +10,7 @@ Contents
 
    admintools
    context
+   css_colours
    decorators
    models
    ranked
