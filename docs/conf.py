@@ -19,9 +19,21 @@ import shlex
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+CUR_DIR = os.path.join(os.path.dirname(__file__))
+AWL_DIR = os.path.abspath(os.path.join(CUR_DIR, 'awl'))
 sys.path.insert(0, os.path.abspath('..'))
+import django
 from django.conf import settings
-settings.configure()
+settings.configure(
+    BASE_DIR=AWL_DIR,
+    INSTALLED_APPS=(
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.admin',
+        'awl', 
+    ),
+)
+django.setup()
 
 # -- General configuration ------------------------------------------------
 
