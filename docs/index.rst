@@ -12,6 +12,7 @@ Contents
    context
    css_colours
    decorators
+   absmodels
    models
    ranked
    tags

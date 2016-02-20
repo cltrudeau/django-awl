@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
-from awl.models import ValidatingMixin
+from awl.absmodels import ValidatingMixin
 from awl.rankedmodel.models import RankedModel
 
 # ============================================================================

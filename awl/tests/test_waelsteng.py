@@ -1,4 +1,4 @@
-import os, tempfile, shutil
+import os, tempfile, shutil, mock
 from django.test import TestCase, override_settings
 
 from awl.waelsteng import AdminToolsMixin
@@ -106,7 +106,12 @@ class WRunnerTest(TestCase):
         self.assertTrue(list(suite))
 
         # -- check media root cleanup
-        runner.teardown_databases(old_config=([], []))
+        with mock.patch("django.test.runner.DiscoverRunner.teardown_databases"):
+            # django 1.8 & 1.9 expect different values of old_config, mocked
+            # out the super teardown_databases class so we don't care, just
+            # want to make sure the post super() call steps get invoked
+            runner.teardown_databases(old_config=[])
+
         self.assertFalse(os.path.exists(self.media_dir))
 
     @classmethod

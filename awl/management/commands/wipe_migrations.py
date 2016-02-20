@@ -5,7 +5,7 @@
 # scripts belonging to them
 import os
 
-from django.apps import apps
+#from django.apps import apps
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
@@ -14,8 +14,10 @@ class Command(BaseCommand):
         project_dir = settings.BASE_DIR
         search_dir = os.path.abspath(os.path.dirname(project_dir))
 
-        for app in apps.get_apps():
-            filename = app.__file__
+        for app_name in settings.INSTALLED_APPS:
+            module = __import__(app_name)
+            filename = module.__file__
+
             if filename.startswith(search_dir):
                 app_dir = os.path.abspath(os.path.dirname(filename))
                 migrations = os.path.join(app_dir, 'migrations')

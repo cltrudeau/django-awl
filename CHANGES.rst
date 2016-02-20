@@ -1,3 +1,15 @@
+0.10
+====
+
+* made django-awl compatible with Django 1.9
+* separated models and abstract models to avoid depracation warnings being
+in Django 1.9 
+    * even if only loading an abstract model from models.py the module gets
+    loaded and django sees the concrete models in the file which aren't in
+    INSTALLED_APPS and issues a warning
+    * now only concrete models are in models.py and the abstract ones are in
+    absmodel.spy
+
 0.9
 ===
 
