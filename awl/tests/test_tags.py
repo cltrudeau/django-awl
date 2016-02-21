@@ -90,3 +90,26 @@ class TagTests(TestCase):
             {% accessor myobj %}
             """
             template = Template(t)
+
+        # test KeyError results in blank 
+        t = """
+        {% load awltags %}
+        
+        {% accessor myobj attr1 'foo' [key1] ['four'] %}
+        """
+        template = Template(t)
+        context = Context(context_data)
+        result = template.render(context)
+        self.assertEqual('', result.strip())
+
+        # test KeyError results blank context variable
+        t = """
+        {% load awltags %}
+        
+        {% accessor myobj attr1 'foo' [key1] ['four'] as thing %}
+        """
+        template = Template(t)
+        context = Context(context_data)
+        result = template.render(context)
+        self.assertEqual('', result.strip())
+        self.assertEqual('', context['thing'])

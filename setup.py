@@ -1,6 +1,6 @@
 import os
 
-VERSION='0.10.0'
+VERSION='0.10.1'
 
 readme = os.path.join(os.path.dirname(__file__), 'README.rst')
 long_description = open(readme).read()
@@ -31,7 +31,7 @@ SETUP_ARGS = dict(
     test_suite="load_tests.get_suite",
     install_requires=[
         'Django>=1.8',
-        'wrench>=0.5.1',
+        'wrench>=0.7',
     ],
     tests_require=[
         'mock>=1.3.0',

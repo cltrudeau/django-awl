@@ -1,3 +1,8 @@
+0.10.1
+======
+
+* improved KeyError handling in the accessor template tag
+
 0.10
 ====
 

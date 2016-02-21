@@ -28,7 +28,7 @@ def getitem(dictionary, keyvar):
         'bar'
 
     .. note::
-        Any KeyErrors are ignored silently
+        Any KeyErrors are ignored and return an empty string
     """
     try:
         return dictionary[keyvar]
@@ -91,27 +91,34 @@ class AccessorNode(template.Node):
         self.as_var = as_var
 
     def render(self, context):
-        ref = context[self.obj_name]
-        for parm in self.parms:
-            if parm[0] == '"' or parm[0] == "'":
-                # parm is a literal
-                ref = getattr(ref, parm[1:-1])
-            elif parm[0] == '[':
-                # parm is a dictionary lookup
-                if parm[1] == '"' or parm[1] == "'":
-                    # dict key is a literal
-                    ref = ref[parm[2:-2]]
+        try:
+            ref = context[self.obj_name]
+            for parm in self.parms:
+                if parm[0] == '"' or parm[0] == "'":
+                    # parm is a literal
+                    ref = getattr(ref, parm[1:-1])
+                elif parm[0] == '[':
+                    # parm is a dictionary lookup
+                    if parm[1] == '"' or parm[1] == "'":
+                        # dict key is a literal
+                        ref = ref[parm[2:-2]]
+                    else:
+                        # dict key is a template var
+                        key = context[parm[1:-1]]
+                        ref = ref[key]
                 else:
-                    # dict key is a template var
-                    key = context[parm[1:-1]]
-                    ref = ref[key]
-            else:
-                # parm is a template var
-                attr = context[parm]
-                ref = getattr(ref, attr)
+                    # parm is a template var
+                    attr = context[parm]
+                    ref = getattr(ref, attr)
 
-        if self.as_var:
-            context[self.as_var] = ref
+            if self.as_var:
+                context[self.as_var] = ref
+                return ''
+
+            return ref
+        except:
+            # any lookup errors should result in empty
+            if self.as_var:
+                context[self.as_var] = ''
+
             return ''
-
-        return ref
