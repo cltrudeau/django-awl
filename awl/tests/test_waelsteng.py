@@ -1,4 +1,5 @@
 import os, tempfile, shutil, mock
+from django.contrib import messages
 from django.test import TestCase, override_settings
 
 from awl.waelsteng import AdminToolsMixin, messages_from_response
@@ -42,9 +43,9 @@ class AdminToolsMixinTest(TestCase, AdminToolsMixin):
         m = messages_from_response(response)
         self.assertEqual(2, len(m))
         self.assertEqual('One', m[0][0])
-        self.assertEqual(25,    m[0][1])
+        self.assertEqual(messages.SUCCESS, m[0][1])
         self.assertEqual('Two', m[1][0])
-        self.assertEqual(40,   m[1][1])
+        self.assertEqual(messages.ERROR, m[1][1])
 
         # -- test handling bad response objects
         m = messages_from_response({})
