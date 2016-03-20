@@ -37,20 +37,38 @@ class AdminToolsMixinTest(TestCase, AdminToolsMixin):
         # test before get, to check that auth call worked
         self.authed_post('/admin/', {})
 
+    def assert_messages(self, contents):
+        self.assertEqual(2, len(contents))
+        self.assertEqual('One', contents[0][0])
+        self.assertEqual(messages.SUCCESS, contents[0][1])
+        self.assertEqual('Two', contents[1][0])
+        self.assertEqual(messages.ERROR, contents[1][1])
+
     def test_messages_from_response(self):
         response = self.authed_get('/awl_test_views/test_view_for_messages/')
 
         m = messages_from_response(response)
-        self.assertEqual(2, len(m))
-        self.assertEqual('One', m[0][0])
-        self.assertEqual(messages.SUCCESS, m[0][1])
-        self.assertEqual('Two', m[1][0])
-        self.assertEqual(messages.ERROR, m[1][1])
+        self.assert_messages(m)
+
+        # -- test handling with cookies
+
+        # wipe out the context, so that the cookie that was set is what gets
+        # processed
+        response.context = None
+
+        m = messages_from_response(response)
+        self.assert_messages(m)
 
         # -- test handling bad response objects
+        response.cookies.pop('messages')
+        m = messages_from_response(response)
+        self.assertEqual(0, len(m))
+
+        # object without context
         m = messages_from_response({})
         self.assertEqual(0, len(m))
 
+        # object with context but empty
         class Dummy(object):
             pass
 
@@ -59,6 +77,7 @@ class AdminToolsMixinTest(TestCase, AdminToolsMixin):
         m = messages_from_response(d)
         self.assertEqual(0, len(m))
 
+        # object with context without messages key
         d.context = {'foo':'bar'}
         m = messages_from_response(d)
         self.assertEqual(0, len(m))

@@ -81,15 +81,26 @@ def messages_from_response(response):
     :returns: a list of tuples (message_string, message_level), one for each
         message in the response context
     """
-    try:
-        if not response.context:
+    messages = []
+    if hasattr(response, 'context') and response.context and \
+            'messages' in response.context:
+        messages = response.context['messages']
+    elif hasattr(response, 'cookies'):
+        # no "context" set-up or no messages item, check for message info in
+        # the cookies
+        morsel = response.cookies.get('messages')
+        if not morsel:
             return []
 
-        return [(m.message, m.level) for m in response.context['messages']]
-    except AttributeError:
+        # use the decoder in the CookieStore to process and get a list of
+        # messages
+        from django.contrib.messages.storage.cookie import CookieStorage
+        store = CookieStorage(FakeRequest())
+        messages = store._decode(morsel.value)
+    else:
         return []
-    except KeyError:
-        return []
+
+    return [(m.message, m.level) for m in messages]
 
 # ============================================================================
 # Tools for testing Django Admin Modules

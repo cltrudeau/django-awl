@@ -1,3 +1,9 @@
+0.11.1
+======
+
+* improved handling of messages_from_response() so that it can deal with
+responses without contexts but with the message cookie set
+
 0.11
 ====
 
