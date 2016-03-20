@@ -1,7 +1,7 @@
 import os, tempfile, shutil, mock
 from django.test import TestCase, override_settings
 
-from awl.waelsteng import AdminToolsMixin
+from awl.waelsteng import AdminToolsMixin, messages_from_response
 
 from awl.tests.admin import LinkAdmin
 from awl.tests.models import Link
@@ -9,7 +9,7 @@ from awl.waelsteng import WRunner
 
 # ============================================================================
 
-class AdminMixinTest(TestCase, AdminToolsMixin):
+class AdminToolsMixinTest(TestCase, AdminToolsMixin):
     def setUp(self):
         self.initiate()
 
@@ -30,11 +30,37 @@ class AdminMixinTest(TestCase, AdminToolsMixin):
             self.visit_admin_link(link_admin, link2, 'visit_me')
 
 
-    def test_coverate(self):
+    def test_coverage(self):
         # miscellaneous pieces to get our coverage to 100%
 
         # test before get, to check that auth call worked
         self.authed_post('/admin/', {})
+
+    def test_messages_from_response(self):
+        response = self.authed_get('/awl_test_views/test_view_for_messages/')
+
+        m = messages_from_response(response)
+        self.assertEqual(2, len(m))
+        self.assertEqual('One', m[0][0])
+        self.assertEqual(25,    m[0][1])
+        self.assertEqual('Two', m[1][0])
+        self.assertEqual(40,   m[1][1])
+
+        # -- test handling bad response objects
+        m = messages_from_response({})
+        self.assertEqual(0, len(m))
+
+        class Dummy(object):
+            pass
+
+        d = Dummy()
+        d.context = {}
+        m = messages_from_response(d)
+        self.assertEqual(0, len(m))
+
+        d.context = {'foo':'bar'}
+        m = messages_from_response(d)
+        self.assertEqual(0, len(m))
 
 # ============================================================================
 

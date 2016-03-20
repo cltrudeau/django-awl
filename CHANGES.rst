@@ -1,3 +1,9 @@
+0.11
+====
+
+* Added messages_from_response() helper in waelsteng which pulls
+contrib.message objects out of a response from client.get() or client.post()
+
 0.10.2
 ======
 

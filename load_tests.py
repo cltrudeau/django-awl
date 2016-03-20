@@ -20,6 +20,7 @@ settings.configure(
     ROOT_URLCONF='awl.tests.urls',
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',

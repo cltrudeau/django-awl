@@ -69,6 +69,28 @@ def create_admin(username='admin', email='admin@admin.com', password='admin'):
     admin.save()
     return admin
 
+
+def messages_from_response(response):
+    """Returns a list of the messages from the django MessageMiddleware
+    package contained within the given response.  This is to be used during
+    unit testing when trying to see if a message was set properly in a view.
+
+    :param response: HttpResponse object, likely obtained through a
+        test client.get() or client.post() call
+
+    :returns: a list of tuples (message_string, message_level), one for each
+        message in the response context
+    """
+    try:
+        if not response.context:
+            return []
+
+        return [(m.message, m.level) for m in response.context['messages']]
+    except AttributeError:
+        return []
+    except KeyError:
+        return []
+
 # ============================================================================
 # Tools for testing Django Admin Modules
 # ============================================================================
