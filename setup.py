@@ -1,6 +1,6 @@
 import os
 
-VERSION='0.10.1'
+VERSION='0.10.2'
 
 readme = os.path.join(os.path.dirname(__file__), 'README.rst')
 long_description = open(readme).read()

@@ -1,3 +1,8 @@
+0.10.2
+======
+
+* added "follow=False" keyword to AdminToolsMixin.authed_get()
+
 0.10.1
 ======
 
