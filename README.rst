@@ -19,7 +19,8 @@ Supports
 django-awl has been tested with Python 2.7, 3.4, 3.5 and Django 1.8, 1.9 and
 1.10.
 
-Docs
-====
+Docs & Source
+=============
 
-Docs available at: http://django-awl.readthedocs.io/en/latest/
+Docs: http://django-awl.readthedocs.io/en/latest/
+Source: https://github.com/cltrudeau/django-awl
