@@ -1,5 +1,6 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
+from awl.rankedmodel import views
 
-urlpatterns = patterns('awl.rankedmodel.views',
-    url(r'^move/(\d+)/(\d+)/(\d+)/$', 'move', name='awl-rankedmodel-move'),
-)
+urlpatterns = [
+    url(r'^move/(\d+)/(\d+)/(\d+)/$', views.move, name='awl-rankedmodel-move'),
+]

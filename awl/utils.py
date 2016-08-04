@@ -1,7 +1,6 @@
 # awl.utils.py
 
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from django.template.loader import render_to_string
 
 # =============================================================================
@@ -9,19 +8,22 @@ from django.template.loader import render_to_string
 # =============================================================================
 
 def render_page(request, page_name, data={}):
-    """A shortcut for using ``render_to_response`` with a
-    :class:`RequestContext` automatically.
     """
-    return render_to_response(page_name, data,
-        context_instance=RequestContext(request))
+    .. deprecated:: 0.12
+        Use ``django.shortcuts.render`` instead
+    
+    This function was a wrapper for ``render_to_response`` that handled
+    request context.  The ``django.shortcuts.render`` method does the same
+    thing, so this just wraps that now. 
+    """
+    return render(request, page_name, data)
 
 
 def render_page_to_string(request, page_name, data={}):
     """A shortcut for using ``render_to_string`` with a
     :class:`RequestContext` automatically.
     """
-    return render_to_string(page_name, data,
-        context_instance=RequestContext(request))
+    return render_to_string(page_name, data, request=request)
 
 # ============================================================================
 # Object Model Tools
