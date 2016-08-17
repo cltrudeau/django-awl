@@ -1,6 +1,6 @@
 import os
 
-VERSION='0.12'
+VERSION='0.13'
 
 readme = os.path.join(os.path.dirname(__file__), 'README.rst')
 long_description = open(readme).read()
@@ -24,6 +24,7 @@ SETUP_ARGS = dict(
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
@@ -31,7 +32,7 @@ SETUP_ARGS = dict(
     test_suite="load_tests.get_suite",
     install_requires=[
         'Django>=1.8',
-        'wrench>=0.7',
+        'wrench>=0.9',
     ],
     tests_require=[
         'mock>=1.3.0',
