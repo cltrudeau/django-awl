@@ -72,11 +72,10 @@ author = 'Christopher Trudeau'
 #
 # The short X.Y version.
 import imp
-#mod = imp.load_source('version', '../version.py')
-mod = imp.load_source('awlsetup', '../setup.py')
+mod = imp.load_source('awl', '../awl/__init__.py')
 
-#version = mod.VERSION
-version = mod.SETUP_ARGS['version']
+version = mod.__version__
+
 # The full version, including alpha/beta/rc tags.
 release = version
 
