@@ -121,44 +121,43 @@ class Choices(object):
     common in django for choices fields, etc.  This object inspects its own
     members (i.e. the inheritors) and produces the corresponding tuples.
 
-    Example:
+    .. code-block:: python
 
-    class Colours(Choices):
-        RED = 'r'
-        LIGHT_BLUE = 'b'
+        class Colours(Choices):
+            RED = 'r'
+            LIGHT_BLUE = 'b'
 
-    >> Colours.RED
-    'r'
-    >> list(Colours)
-    [('r', 'Red'), ('b', 'Light Blue')]
-
+        >> Colours.RED
+        'r'
+        >> list(Colours)
+        [('r', 'Red'), ('b', 'Light Blue')]
 
     A member value can also be a tuple to override the default string
 
-    Example:
+    .. code-block:: python
 
-    class Colours(Choices):
-        RED = 'r'
-        BLUE = 'b', 'Blueish'
+        class Colours(Choices):
+            RED = 'r'
+            BLUE = 'b', 'Blueish'
 
-    >> list(Colours)
-    [('r', 'Red'), ('b', 'Blueish')]
+        >> list(Colours)
+        [('r', 'Red'), ('b', 'Blueish')]
 
 
     A inheriting class can also add or override members.
 
-    Example:
+    .. code-block:: python
 
-    class Colours(Choices):
-        RED = 'r'
-        BLUE = 'b'
+        class Colours(Choices):
+            RED = 'r'
+            BLUE = 'b'
 
-    class MoreColours(Colours):
-        GREEN = 'g'
-        BLUE = 'b', 'Even More Blue'
+        class MoreColours(Colours):
+            GREEN = 'g'
+            BLUE = 'b', 'Even More Blue'
 
-    >> list(Colours)
-    [('r', 'Red'), ('b', 'Even More Blue'), ('g', 'Green')]
+        >> list(Colours)
+        [('r', 'Red'), ('b', 'Even More Blue'), ('g', 'Green')]
     """
     @classmethod
     def get_value(cls, key):
@@ -178,7 +177,8 @@ class QuerySetChain(object):
     django.core.paginator.  Does not support re-ordering or re-filtering
     across the set.
 
-    Usage:
+    .. code-block:: python
+
         q1 = Thing.objects.filter(foo)
         q2 = Stuff.objects.filter(bar)
         qsc = QuerySetChain(q1, q2)
