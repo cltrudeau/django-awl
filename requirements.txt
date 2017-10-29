@@ -3,7 +3,7 @@
 coverage==4.4.1
 Django==1.11.6
 mock==2.0.0
-pudb==2017.4
+pudb==2017.1.4
 pyflakes==1.6.0
 Sphinx==1.6.5
 sphinx-rtd-theme==0.2.4
