@@ -1,4 +1,4 @@
-import os, tempfile, shutil, mock
+import os, tempfile, shutil, mock, six
 from django.contrib import messages
 from django.test import TestCase, override_settings
 
@@ -84,27 +84,22 @@ class AdminToolsMixinTest(TestCase, AdminToolsMixin):
 
 # ============================================================================
 
+# dummy objects and settings for testing the runner
 class GotHere(Exception):
     pass
-
 
 def fake_loader():
     raise GotHere()
 
-
 wrunner_settings = {
-    'MEDIA_ROOT':'',
     'TEST_DATA':'awl.tests.test_waelsteng.fake_loader',
 }
-
 
 class WRunnerTest(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.tempdir = tempfile.mkdtemp()
         cls.media_dir = os.path.abspath(os.path.join(cls.tempdir, 'media'))
-        global wrunner_settings
-        wrunner_settings['MEDIA_ROOT'] = cls.media_dir
 
     def assert_test_strings(self, expected, tests):
         names = [str(test) for test in tests]
@@ -112,21 +107,39 @@ class WRunnerTest(TestCase):
 
     @override_settings(WRUNNER=wrunner_settings)
     def test_runner(self):
-        # hopefully the universe won't implode as we're using our runner to
-        # test our runner
-        runner = WRunner()
+        global wrunner_settings
+        wrunner_settings['MEDIA_ROOT'] = self.media_dir
 
-        # check media root handling
-        runner.setup_test_environment()
-        self.assertTrue(os.path.isdir(self.media_dir))
+        # this is going to get ugly... we're using the runner right now, so to
+        # test the nooks and crannies we have create another one; django, as
+        # of 1.11 doesn't like you to do this, so we'll mock out super() to
+        # stop the parent from getting invoked
 
-        # do it again to make sure directory already existing doesn't blow
-        # anything up
-        runner.setup_test_environment()
+        name = '%s.super' % six.moves.builtins.__name__
+        with mock.patch(name):
+            fake_runner = WRunner()
 
-        # check test loader
-        with self.assertRaises(GotHere):
-            runner.setup_databases()
+            # check media root handling
+            fake_runner.setup_test_environment()
+            self.assertTrue(os.path.isdir(self.media_dir))
+
+            # do it again to make sure directory already existing doesn't blow
+            # anything up 
+            fake_runner.setup_test_environment()
+
+            # check test loader
+            with self.assertRaises(GotHere):
+                fake_runner.setup_databases()
+
+            # -- check media root cleanup
+            fake_runner.teardown_databases(old_config=[])
+            self.assertFalse(os.path.exists(self.media_dir))
+
+        # the ugliness continues! to test the building test suites we need a
+        # real, not faked out, runner, so now we'll create one that isn't
+        # mocked out
+
+        real_runner = WRunner()
 
         # -- test various labels work
         expected = [
@@ -134,7 +147,7 @@ class WRunnerTest(TestCase):
             'test_same_order (awl.tests.test_ranked.AloneTests)',
             'test_too_large (awl.tests.test_ranked.GroupedTests)',
         ]
-        suite = runner.build_suite([
+        suite = real_runner.build_suite([
             'awl.tests.test_ranked.GroupedTests.test_too_large',
             '=_same_order'])
         self.assert_test_strings(expected, suite)
@@ -144,21 +157,12 @@ class WRunnerTest(TestCase):
             'test_same_order (awl.tests.test_ranked.GroupedTests)',
             'test_same_order (awl.tests.test_ranked.AloneTests)',
         ]
-        suite = runner.build_suite(['=_same_order'])
+        suite = real_runner.build_suite(['=_same_order'])
         self.assert_test_strings(expected, suite)
 
         # test no labels at all
-        suite = runner.build_suite([])
+        suite = real_runner.build_suite([])
         self.assertTrue(list(suite))
-
-        # -- check media root cleanup
-        with mock.patch("django.test.runner.DiscoverRunner.teardown_databases"):
-            # django 1.8 & 1.9 expect different values of old_config, mocked
-            # out the super teardown_databases class so we don't care, just
-            # want to make sure the post super() call steps get invoked
-            runner.teardown_databases(old_config=[])
-
-        self.assertFalse(os.path.exists(self.media_dir))
 
     @classmethod
     def tearDownClass(cls):

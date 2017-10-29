@@ -1,11 +1,12 @@
 # These requirements are for running tests and the sample_site, the library 
 # itself only needs a subset, see setup.py for that list
-coverage==4.2
-Django==1.10
+coverage==4.4.1
+Django==1.11.6
 mock==2.0.0
-pudb==2016.2
-pyflakes==1.2.3
-Sphinx==1.4.5
-tox==2.3.1
-twine==1.8.1
-wrench==0.9
+pudb==2017.4
+pyflakes==1.6.0
+Sphinx==1.6.5
+sphinx-rtd-theme=0.2.4
+tox==2.9.1
+twine==1.9.1
+wrench==0.9.1

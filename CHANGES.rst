@@ -1,3 +1,24 @@
+0.14
+====
+
+* removed Django 1.8, 1.9 compatability (may still work, no longer tested)
+* added Django 1.11 compatability
+* added python 3.6 compatability
+* added Choices object 
+    * easy way of creating django's tuple-of-tuple structure used in choices
+    lists, etc.
+* added QuerySetChain: a query set that chains other querysets together
+
+0.13
+====
+
+* added support for python 3.5
+
+0.12
+====
+
+* added support for Django 1.10
+
 0.11.1
 ======
 
