@@ -1,3 +1,9 @@
+0.15
+====
+
+* WRunner now supports creating a temporary directory for MEDIA_ROOT and
+removing it on exit
+
 0.14
 ====
 

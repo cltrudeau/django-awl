@@ -48,7 +48,10 @@ settings.configure(
                 'django.contrib.messages.context_processors.messages',
             ]
         }
-    }]
+    }],
+    WRUNNER = {
+        'CREATE_TEMP_MEDIA_ROOT':True,
+    },
 )
 django.setup()
 

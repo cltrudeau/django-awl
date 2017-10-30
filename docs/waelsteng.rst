@@ -43,11 +43,11 @@ Configuration is done inside of the django settings module:
 .. code-block:: python
 
     WRUNNER = {
-        'MEDIA_ROOT':'/path/to/test/media/directory/',
+        'CREATE_TEMP_MEDIA_ROOT':True,
         'TEST_DATA':'package.module.function_name'
     }
 
-If ``MEDIA_ROOT` is set, then a directory is created and the
+If ``CREATE_TEMP_MEDIA_ROOT`` is set, then a directory is created and the
 ``settings.MEDIA_ROOT`` attribute is changed for the tests.  The directory is
 then destoryed upon test completion.
 

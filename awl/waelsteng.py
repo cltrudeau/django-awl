@@ -4,13 +4,14 @@
 # module in order to handle some better grouping of items.  New things will
 # need to be explicitly added to docs/waelsteng.rst
 #
-import os, shutil
+import shutil, tempfile
 from unittest import TestSuite
 
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.utils import lookup_field
 from django.contrib.auth.models import User
+from django.test import override_settings
 from django.test.runner import DiscoverRunner, reorder_suite
 
 from wrench.utils import dynamic_load, parse_link
@@ -261,14 +262,16 @@ class AdminToolsMixin(object):
 # ============================================================================
 
 class WRunner(DiscoverRunner):
-    # documentation for this is directly in waelsteng.rst
+    # documentation for this is directly in docs/waelsteng.rst
     def __init__(self, **kwargs):
         if 'verbosity' not in kwargs:
             kwargs['verbosity'] = 2
 
         w_settings = getattr(settings, 'WRUNNER', {})
-        self.test_media_root = w_settings.get('MEDIA_ROOT', '')
+        self.create_temp_media_root = w_settings.get('CREATE_TEMP_MEDIA_ROOT', 
+            False)
         self.test_data = w_settings.get('TEST_DATA', '')
+        self.test_media_root = settings.MEDIA_ROOT
 
         super(WRunner, self).__init__(**kwargs)
 
@@ -277,12 +280,8 @@ class WRunner(DiscoverRunner):
         settings.STATICFILES_STORAGE = \
             'django.contrib.staticfiles.storage.StaticFilesStorage'
 
-        if self.test_media_root:
-            settings.MEDIA_ROOT = self.test_media_root
-            try:
-                os.makedirs(self.test_media_root)
-            except:
-                pass # ignore errors if directory existed
+        if self.create_temp_media_root:
+            self.test_media_root = tempfile.mkdtemp()
 
     def setup_databases(self, **kwargs):
         result = super(WRunner, self).setup_databases(**kwargs)
@@ -295,7 +294,7 @@ class WRunner(DiscoverRunner):
 
     def teardown_databases(self, old_config, **kwargs):
         super(WRunner, self).teardown_databases(old_config, **kwargs)
-        if self.test_media_root:
+        if self.create_temp_media_root:
             shutil.rmtree(self.test_media_root)
 
     def build_suite(self, test_labels, extra_tests=None, **kwargs):
@@ -325,3 +324,7 @@ class WRunner(DiscoverRunner):
 
         # parent implementation reorders, so we'll do it too
         return reorder_suite(suite, self.reorder_by)
+
+    def run_suite(self, suite, **kwargs):
+        with override_settings(MEDIA_ROOT=self.test_media_root):
+            return super(WRunner, self).run_suite(suite, **kwargs)

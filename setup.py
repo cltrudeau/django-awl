@@ -33,10 +33,10 @@ SETUP_ARGS = dict(
     install_requires=[
         'Django>=1.10',
         'wrench>=0.9',
-        'six>=1.10',
+        'six>=1.11',
     ],
     tests_require=[
-        'mock>=1.3.0',
+        'mock>=2.0.0',
     ]
 )
 

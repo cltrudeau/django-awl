@@ -1,4 +1,4 @@
-import os, tempfile, shutil, mock, six
+import os, tempfile, shutil, mock, six, unittest
 from django.contrib import messages
 from django.test import TestCase, override_settings
 
@@ -92,6 +92,7 @@ def fake_loader():
     raise GotHere()
 
 wrunner_settings = {
+    'CREATE_TEMP_MEDIA_ROOT':True,
     'TEST_DATA':'awl.tests.test_waelsteng.fake_loader',
 }
 
@@ -107,33 +108,43 @@ class WRunnerTest(TestCase):
 
     @override_settings(WRUNNER=wrunner_settings)
     def test_runner(self):
-        global wrunner_settings
-        wrunner_settings['MEDIA_ROOT'] = self.media_dir
-
         # this is going to get ugly... we're using the runner right now, so to
         # test the nooks and crannies we have create another one; django, as
         # of 1.11 doesn't like you to do this, so we'll mock out super() to
         # stop the parent from getting invoked
 
         name = '%s.super' % six.moves.builtins.__name__
+        fake_runner = WRunner()
         with mock.patch(name):
-            fake_runner = WRunner()
-
-            # check media root handling
-            fake_runner.setup_test_environment()
-            self.assertTrue(os.path.isdir(self.media_dir))
-
-            # do it again to make sure directory already existing doesn't blow
-            # anything up 
             fake_runner.setup_test_environment()
 
-            # check test loader
+            # check test data loader
             with self.assertRaises(GotHere):
                 fake_runner.setup_databases()
 
-            # -- check media root cleanup
+        # check a temp media root was created
+        self.assertTrue(os.path.exists(fake_runner.test_media_root))
+        self.assertTrue(os.path.isdir(fake_runner.test_media_root))
+
+        # inside of WRunner's test suites, a temp media root should have been
+        # created, to test this we'll need a test suite (yes, inside of our
+        # TestCase which is inside of a suite already)... told you, ugly was
+        # coming
+
+        class InteriorRunnerTestCase(TestCase):
+            def runTest(self):
+                from django.conf import settings
+                self.assertEqual(fake_runner.test_media_root, 
+                    settings.MEDIA_ROOT)
+
+        suite = unittest.TestSuite()
+        suite.addTest(InteriorRunnerTestCase())
+        fake_runner.run_suite(suite)
+
+        # -- check media root cleanup
+        with mock.patch(name):
             fake_runner.teardown_databases(old_config=[])
-            self.assertFalse(os.path.exists(self.media_dir))
+            self.assertFalse(os.path.exists(fake_runner.test_media_root))
 
         # the ugliness continues! to test the building test suites we need a
         # real, not faked out, runner, so now we'll create one that isn't
