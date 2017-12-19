@@ -35,7 +35,8 @@ class Nested(models.Model):
 @python_2_unicode_compatible
 class Inner(models.Model):
     name = models.CharField(max_length=10)
-    nested = models.ForeignKey(Nested, null=True, blank=True)
+    nested = models.ForeignKey(Nested, null=True, blank=True,
+        on_delete=models.CASCADE)
 
     def __str__(self):
         return 'Inner(id=%s %s)' % (self.id, self.name)
@@ -47,7 +48,8 @@ class Inner(models.Model):
 
 class Outer(models.Model):
     name = models.CharField(max_length=10)
-    inner = models.ForeignKey(Inner, null=True, blank=True)
+    inner = models.ForeignKey(Inner, null=True, blank=True,
+        on_delete=models.CASCADE)
 
 # ============================================================================
 # RankedModel Models 

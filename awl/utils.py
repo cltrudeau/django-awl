@@ -59,10 +59,10 @@ def refetch_for_update(obj):
 # ============================================================================
 
 class URLTree(object):
-    """A tree representation of the django url regexes.  Each pattern is
-    stored in a dictionary with its pattern, full path, name (if available)
-    and children.  Root items in the tree can be accessed through the
-    ``children`` list attribute.
+    """A tree representation of the django url paths.  Each path is stored in
+    a dictionary with its regex pattern, full path, name (if available) and
+    children.  Root items in the tree can be accessed through the ``children``
+    list attribute.
     """
     def __init__(self):
         self.children = []
@@ -74,9 +74,9 @@ class URLTree(object):
 
     def _parse_node(self, parent, parent_path, children):
         for entry in parent:
-            path = parent_path + entry.regex.pattern
+            path = parent_path + entry.pattern.regex.pattern
             d = {
-                'pattern':entry.regex.pattern,
+                'pattern':entry.pattern.regex.pattern,
                 'path':path,
                 'name':entry.name if hasattr(entry, 'name') else '',
                 'children':[],

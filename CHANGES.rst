@@ -1,3 +1,9 @@
+0.16
+====
+
+* Support for Django 2.0
+* no longer test for Django 1.10 (should work, not tested)
+
 0.15
 ====
 

@@ -1,5 +1,5 @@
 # awl.admintools.py
-from django.core import urlresolvers
+from django.urls import reverse
 from django.template import Context, Template
 
 # ============================================================================
@@ -16,7 +16,7 @@ def admin_obj_link(obj, display=''):
         Text containing HTML for a link
     """
     # get the url for the change list for this object
-    url = urlresolvers.reverse('admin:%s_%s_changelist' % (obj._meta.app_label,
+    url = reverse('admin:%s_%s_changelist' % (obj._meta.app_label,
         obj._meta.model_name))
     url += '?id__exact=%s' % obj.id
 
@@ -74,7 +74,7 @@ def make_admin_obj_mixin(name):
 
         class Outer(models.Model):
             name = models.CharField(max_length=10)
-            inner = models.ForeignKey(Inner)
+            inner = models.ForeignKey(Inner, on_delete=models.CASCADE)
 
 
         # admin file

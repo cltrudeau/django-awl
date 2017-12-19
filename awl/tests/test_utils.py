@@ -24,8 +24,8 @@ class UtilsTest(TestCase):
 
             # check for some of our rankedmodel items in the output
             output = out.getvalue().split('\n')
-            self.assertIn('^rankedmodel/', output)
-            self.assertIn(('^rankedmodel/^move/(\d+)/(\d+)/(\d+)/$, ' 
+            self.assertIn('^rankedmodel\\/', output)
+            self.assertIn(('^rankedmodel\\/^move/(\d+)/(\d+)/(\d+)/$, ' 
                 'name=awl-rankedmodel-move'), output)
 
         finally:

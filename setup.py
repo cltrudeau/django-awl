@@ -31,7 +31,7 @@ SETUP_ARGS = dict(
     keywords='django,state machine',
     test_suite="load_tests.get_suite",
     install_requires=[
-        'Django>=1.10',
+        'Django>=1.11',
         'wrench>=0.9',
         'six>=1.11',
     ],
