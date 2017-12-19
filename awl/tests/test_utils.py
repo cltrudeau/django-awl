@@ -1,5 +1,6 @@
 # awl.tests.test_utils.py
 import sys
+import django
 from django.test import TestCase
 
 from six import StringIO
@@ -24,9 +25,16 @@ class UtilsTest(TestCase):
 
             # check for some of our rankedmodel items in the output
             output = out.getvalue().split('\n')
-            self.assertIn('^rankedmodel\\/', output)
-            self.assertIn(('^rankedmodel\\/^move/(\d+)/(\d+)/(\d+)/$, ' 
-                'name=awl-rankedmodel-move'), output)
+
+            # django 2.0 and 1.11 have different URL syntax
+            if django.VERSION[0] >= 2:
+                self.assertIn('^rankedmodel\\/', output)
+                self.assertIn(('^rankedmodel\\/^move/(\d+)/(\d+)/(\d+)/$, ' 
+                    'name=awl-rankedmodel-move'), output)
+            else: # pragma: no cover
+                self.assertIn('^rankedmodel/', output)
+                self.assertIn(('^rankedmodel/^move/(\d+)/(\d+)/(\d+)/$, ' 
+                    'name=awl-rankedmodel-move'), output)
 
         finally:
             sys.stdout = saved_stdout

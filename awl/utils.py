@@ -1,5 +1,6 @@
 # awl.utils.py
 
+import django
 from django.shortcuts import render
 from django.template.loader import render_to_string
 
@@ -74,9 +75,15 @@ class URLTree(object):
 
     def _parse_node(self, parent, parent_path, children):
         for entry in parent:
-            path = parent_path + entry.pattern.regex.pattern
+            # django 1.11 and 2.0 have different URLResolver objects
+            if django.VERSION[0] >= 2:
+                pattern = entry.pattern.regex.pattern
+            else:  # pragma: no cover
+                pattern = entry.regex.pattern
+
+            path = parent_path + pattern
             d = {
-                'pattern':entry.pattern.regex.pattern,
+                'pattern':pattern,
                 'path':path,
                 'name':entry.name if hasattr(entry, 'name') else '',
                 'children':[],
