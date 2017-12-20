@@ -14,8 +14,8 @@ from django.contrib.auth.models import User
 from django.test import override_settings
 from django.test.runner import DiscoverRunner, reorder_suite
 
-from wrench.utils import dynamic_load, parse_link
-from wrench.waelstow import find_shortcut_tests
+from screwdriver import dynamic_load, parse_link
+from waelstow import find_shortcut_tests
 
 # ============================================================================
 # View Testing Tools

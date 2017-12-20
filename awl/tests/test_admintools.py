@@ -2,7 +2,7 @@
 from django.test import TestCase
 from django.contrib.admin.utils import label_for_field
 
-from wrench.utils import parse_link
+from screwdriver import parse_link
 
 from awl.waelsteng import AdminToolsMixin
 from awl.tests.models import Nested, Inner, Outer

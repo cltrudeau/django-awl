@@ -1,3 +1,8 @@
+0.17
+====
+
+* Removed dependancies on deprecated "wrench" library
+
 0.16
 ====
 

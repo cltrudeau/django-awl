@@ -32,8 +32,10 @@ SETUP_ARGS = dict(
     test_suite="load_tests.get_suite",
     install_requires=[
         'Django>=1.11',
-        'wrench>=0.9',
+        'logthing>=0.10.0',
+        'screwdriver>=0.10.0',
         'six>=1.11',
+        'waelstow>=0.10.0',
     ],
     tests_require=[
         'mock>=2.0.0',

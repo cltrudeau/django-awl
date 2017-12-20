@@ -5,7 +5,7 @@ from django.http import Http404
 
 from awl.decorators import post_required
 from awl.waelsteng import FakeRequest
-from wrench.logtools.utils import silence_logging
+from logthing.utils import silence_logging
 
 # ============================================================================
 

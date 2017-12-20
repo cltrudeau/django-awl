@@ -1,11 +1,11 @@
 # awl.logtools.py
 
-from wrench.logtools.utils import default_logging_dict
+from logthing.utils import default_logging_dict
 
 # =============================================================================
 
 def django_logging_dict(log_dir, handlers=['file'], filename='debug.log'):
-    """Extends :func:`wrench.logtools.utils.default_logging_dict` with django
+    """Extends :func:`logthing.utils.default_logging_dict` with django
     specific values.
     """
     d = default_logging_dict(log_dir, handlers, filename)

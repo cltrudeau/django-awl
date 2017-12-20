@@ -2,11 +2,13 @@
 # itself only needs a subset, see setup.py for that list
 coverage==4.4.1
 Django==1.11.6
+logthing==0.10.0
 mock==2.0.0
 pudb==2017.1.4
 pyflakes==1.6.0
+screwdriver==0.10.0
 Sphinx==1.6.5
 sphinx-rtd-theme==0.2.4
 tox==2.9.1
 twine==1.9.1
-wrench==0.9.1
+waelstow==0.10.0
