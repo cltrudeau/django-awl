@@ -1,3 +1,9 @@
+0.17.1
+======
+
+* upgraded dependancies to a working version of screwdriver
+* changed wheel build to be universal
+
 0.17
 ====
 
