@@ -1,3 +1,8 @@
+0.18
+====
+
+* added get_field_names() utility
+
 0.17.1
 ======
 

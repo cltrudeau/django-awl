@@ -7,7 +7,7 @@ from six import StringIO
 
 from awl.tests.models import Link
 from awl.utils import (URLTree, refetch, refetch_for_update, render_page,
-    render_page_to_string)
+    render_page_to_string, get_field_names)
 from awl.waelsteng import FakeRequest
 
 # ============================================================================
@@ -61,3 +61,21 @@ class UtilsTest(TestCase):
 
         response = render_page(request, 'sample.html', {'name':'World'})
         self.assertEqual(expected, response.content.decode('ascii'))
+
+    def test_get_field_names(self):
+        from awl.tests.models import Person
+
+        # test defaults, ignore order
+        expected = ['name', 'phone']
+        result = get_field_names(Person)
+        self.assertEqual(set(result), set(expected))
+
+        print(40*'=')
+
+        # test ignore_auto, ignore_relations and exclude
+        expected.extend(['id', 'building', 'address', 'courses', 'best_friend',
+            'person'])
+        expected.remove('phone')
+        result = get_field_names(Person, ignore_auto=False,
+            ignore_relations=False, exclude=['phone'])
+        self.assertEqual(set(result), set(expected))

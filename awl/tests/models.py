@@ -70,3 +70,27 @@ class Grouped(RankedModel):
 
     def grouped_filter(self):
         return Grouped.objects.filter(group=self.group)
+
+# ============================================================================
+# get_field_names() models
+
+class Address(models.Model):
+    address_info = models.CharField(max_length=30)
+
+
+class Course(models.Model):
+    course_name = models.CharField(max_length=30)
+
+
+class Person(models.Model):
+    name = models.CharField(max_length=30)
+    phone = models.CharField(max_length=30)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    courses = models.ManyToManyField(Course)
+    best_friend = models.OneToOneField('Person', on_delete=models.CASCADE)
+
+
+class Building(models.Model):
+    superintendent = models.ForeignKey(Person, on_delete=models.CASCADE)
+
+
