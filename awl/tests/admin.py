@@ -36,10 +36,14 @@ base = make_admin_obj_mixin('ChapterMixin')
 base.add_obj_link('show_author', 'book__author')
 base.add_obj_link('show_book', 'book', 'My Book', 
     '{{obj.classname}}.id={{obj.id}}')
+base.add_obj_ref('readonly_author', 'book__author')
+base.add_obj_ref('readonly_book', 'book', 'Readonly Book', 
+    'RO {{obj.classname}}.id={{obj.id}}')
 
 @admin.register(Chapter)
 class ChapterAdmin(admin.ModelAdmin, base):
-    list_display = ('name', 'show_author', 'show_book')
+    list_display = ('name', 'show_author', 'show_book', 'readonly_author',
+        'readonly_book')
 
 # ============================================================================
 # RankedModel Admin Models

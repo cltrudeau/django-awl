@@ -1,3 +1,8 @@
+0.19
+====
+
+* added "add_obj_ref()" method to admintools make_admin_mixin utility
+
 0.18.2
 ======
 

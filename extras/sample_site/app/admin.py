@@ -27,7 +27,9 @@ base = make_admin_obj_mixin('EpisodeMixin')
 base.add_obj_link('show_writer', 'show__writer', 
     'This is the Writer Column Title', 'writer={{obj.id}}')
 base.add_obj_link('show_show', 'show')
+base.add_obj_ref('show_writer_name', 'show__writer', 
+    'Read-Only Writer Column', '{{obj.name}} (id={{obj.id}})')
 
 @admin.register(Episode)
 class EpisodeAdmin(admin.ModelAdmin, base):
-    list_display = ('name', 'show_writer', 'show_show')
+    list_display = ('name', 'show_writer', 'show_show', 'show_writer_name')

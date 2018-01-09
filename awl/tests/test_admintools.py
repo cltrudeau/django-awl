@@ -45,6 +45,12 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         self.assertEqual('Author(id=1 Tolstoy)', text)
         self.assertEqual('/admin/tests/author/?id__exact=1', url)
 
+        # check readonly, double dereferenced Author from Chapter
+        result = self.field_value(chapter_admin, ch1, 'readonly_author')
+        self.assertEqual('Author(id=1 Tolstoy)', result)
+        result = self.field_value(chapter_admin, ch1, 'readonly_book')
+        self.assertEqual('RO Book.id=1', result)
+
         # check the title got set correctly
         label = label_for_field('show_book', ch1, chapter_admin)
         self.assertEqual(label, 'My Book')
@@ -58,4 +64,7 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         ch2.book = book
         ch2.save()
         result = self.field_value(chapter_admin, ch2, 'show_author')
+        self.assertEqual('', result)
+
+        result = self.field_value(chapter_admin, ch2, 'readonly_author')
         self.assertEqual('', result)

@@ -7,7 +7,7 @@ from six import StringIO
 
 from awl.tests.models import Link
 from awl.utils import (URLTree, refetch, refetch_for_update, render_page,
-    render_page_to_string, get_field_names)
+    render_page_to_string, get_field_names, get_obj_attr)
 from awl.waelsteng import FakeRequest
 
 # ============================================================================
@@ -77,3 +77,38 @@ class UtilsTest(TestCase):
         result = get_field_names(Person, ignore_auto=False,
             ignore_relations=False, exclude=['phone'])
         self.assertEqual(set(result), set(expected))
+
+    def test_get_obj_attr(self):
+
+        # --- data for testing
+        class Character(object):
+            pass
+
+        class Cartoon(object):
+            pass
+
+        barney = Character()
+        barney.name = 'Barney'
+        betty = Character()
+        betty.name = 'Betty'
+        betty.husband = barney
+        wilma = Character()
+        wilma.name = 'Wilma'
+        wilma.friend = betty
+
+        cartoon = Cartoon()
+        cartoon.name = 'Flinstones'
+        cartoon.character = wilma
+
+        # --- tests
+        self.assertEqual('Flinstones', get_obj_attr(cartoon, 'name'))
+        self.assertEqual(wilma, get_obj_attr(cartoon, 'character'))
+        self.assertEqual(betty, get_obj_attr(cartoon, 'character__friend'))
+        self.assertEqual(barney, get_obj_attr(cartoon,
+            'character__friend__husband'))
+
+        with self.assertRaises(AttributeError):
+            get_obj_attr(cartoon, 'foo')
+
+        with self.assertRaises(AttributeError):
+            get_obj_attr(cartoon, 'character__foo')
