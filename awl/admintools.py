@@ -77,6 +77,7 @@ def make_admin_obj_mixin(name):
 
         add_obj_ref(funcname, attr, [title, display])
 
+
     Django admin ``list_display`` does not support the double underscore
     semantics of object references.  This method adds a function to the mixin
     that returns the ``str(obj)`` value from object relations.
@@ -102,6 +103,7 @@ def make_admin_obj_mixin(name):
     .. code-block:: python
 
         add_obj_link(funcname, attr, [title, display])
+
 
     This method adds a function to the mixin that returns a link to a django
     admin change list page for the member attribute of the object being
@@ -139,38 +141,41 @@ def make_admin_obj_mixin(name):
             author = models.ForeignKey(Author, on_delete=models.CASCADE)
 
 
+    .. code-block:: python
+
         # ---- admin.py file ----
         @admin.register(Author)
         class Author(admin.ModelAdmin):
             list_display = ('name', )
 
 
-        base = make_admin_obj_mixin('BookMixin')
-        base.add_obj_link('show_author', 'Author', 'Our Authors',
+        mixin = make_admin_obj_mixin('BookMixin')
+        mixin.add_obj_link('show_author', 'Author', 'Our Authors',
             '{{obj.name}} (id={{obj.id}})')
 
         @admin.register(Book)
-        class BookAdmin(admin.ModelAdmin):
+        class BookAdmin(admin.ModelAdmin, mixin):
             list_display = ('name', 'show_author')
 
 
     A sample django admin page for "Book" would have the table:
 
-    +---------------------------------+-----------------------+
-    | Name                            | Our Authors           |
-    +=================================+=======================+
-    | Hitchhikers Guide To The Galaxy | Douglas Adams (id=1)  |
-    +---------------------------------+-----------------------|
-    | War and Peace                   | Tolstoy (id=2)        |
-    +---------------------------------+-----------------------|
-    | Dirk Gently                     | Douglas Adams (id=1)  |
-    +---------------------------------+-----------------------|
+    +---------------------------------+------------------------+
+    | Name                            | Our Authors            |
+    +=================================+========================+
+    | Hitchhikers Guide To The Galaxy | *Douglas Adams (id=1)* |
+    +---------------------------------+------------------------+
+    | War and Peace                   | *Tolstoy (id=2)*       |
+    +---------------------------------+------------------------+
+    | Dirk Gently                     | *Douglas Adams (id=1)* |
+    +---------------------------------+------------------------+
 
-    Each of the items in the "Our Authors" column would be a link to the django
-    admin change list for the "Author" object with a filter set to show just
-    the object that was clicked.  For example, if you clicked "Douglas Adams
-    (id=1)" you would be taken to the Author change list page filtered just
-    for Douglas Adams books.
+
+    Each of the *items* in the "Our Authors" column would be a link to the
+    django admin change list for the "Author" object with a filter set to show
+    just the object that was clicked.  For example, if you clicked "Douglas
+    Adams (id=1)" you would be taken to the Author change list page filtered
+    just for Douglas Adams books.
 
     The ``add_obj_ref`` method is similar to the above, but instead of showing
     links, it just shows text and so can be used for view-only attributes of
