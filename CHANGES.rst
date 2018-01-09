@@ -1,3 +1,8 @@
+0.18.2
+======
+
+* forgot to update sample_site with new test classes
+
 0.18.1
 ======
 

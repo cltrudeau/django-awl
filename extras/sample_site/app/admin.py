@@ -1,13 +1,13 @@
 from django.contrib import admin
 
 from app.models import Writer, Show, Episode
-from awl.tests.models import Nested, Inner, Outer
+from awl.tests.models import Author, Book, Chapter
 from awl.admintools import make_admin_obj_mixin
 
 # remove the awl.test admin files, they confuse things
-admin.site.unregister(Nested)
-admin.site.unregister(Inner)
-admin.site.unregister(Outer)
+admin.site.unregister(Author)
+admin.site.unregister(Book)
+admin.site.unregister(Chapter)
 
 
 @admin.register(Writer)
