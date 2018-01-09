@@ -25,30 +25,30 @@ class Validator(ValidatingMixin, models.Model):
 # ============================================================================
 
 @python_2_unicode_compatible
-class Nested(models.Model):
-    name = models.CharField(max_length=10)
+class Author(models.Model):
+    name = models.CharField(max_length=20)
 
     def __str__(self):
-        return 'Nested(id=%s %s)' % (self.id, self.name)
+        return 'Author(id=%s %s)' % (self.id, self.name)
 
 
 @python_2_unicode_compatible
-class Inner(models.Model):
-    name = models.CharField(max_length=10)
-    nested = models.ForeignKey(Nested, null=True, blank=True,
+class Book(models.Model):
+    name = models.CharField(max_length=20)
+    author = models.ForeignKey(Author, null=True, blank=True,
         on_delete=models.CASCADE)
 
     def __str__(self):
-        return 'Inner(id=%s %s)' % (self.id, self.name)
+        return 'Book(id=%s %s)' % (self.id, self.name)
 
     @property
     def classname(self):
-        return 'Inner'
+        return 'Book'
 
 
-class Outer(models.Model):
-    name = models.CharField(max_length=10)
-    inner = models.ForeignKey(Inner, null=True, blank=True,
+class Chapter(models.Model):
+    name = models.CharField(max_length=20)
+    book = models.ForeignKey(Book, null=True, blank=True,
         on_delete=models.CASCADE)
 
 # ============================================================================

@@ -2,17 +2,18 @@
 
 from django.core.management.base import BaseCommand
 
-from app.models import Nested, Inner, Outer
+from app.models import Writer, Show, Episode
 
 # =============================================================================
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        n = Nested.objects.create(name='n1')
-        i = Inner.objects.create(name='i1', nested=n)
-        o = Outer.objects.create(name='o1.1', inner=i)
-        o = Outer.objects.create(name='o1.2', inner=i)
+        writer = Writer.objects.create(name='Douglas Adams')
+        show = Show.objects.create(title='Dirk Gently', writer=writer)
+        episode = Episode.objects.create(name='Space Rabbit', show=show)
+        episode = Episode.objects.create(name='Fans of Wet Circles', show=show)
 
-        n = Nested.objects.create(name='n2')
-        i = Inner.objects.create(name='i2', nested=n)
-        o = Outer.objects.create(name='o2.1', inner=i)
+        writer = Writer.objects.create(name='G.R.R Martin')
+        show = Show.objects.create(title='Game of Thrones', writer=writer)
+        episode = Episode.objects.create(name='Dragonstone', show=show)
+        episode = Episode.objects.create(name='Stormborn', show=show)

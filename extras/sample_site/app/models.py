@@ -1,23 +1,24 @@
 from django.db import models
 
-class Nested(models.Model):
-    name = models.CharField(max_length=10)
+class Writer(models.Model):
+    name = models.CharField(max_length=50)
 
     def __str__(self):
-        return 'Nested(id=%s %s)' % (self.id, self.name)
+        return 'Writer(id=%s %s)' % (self.id, self.name)
 
 
-class Inner(models.Model):
-    name = models.CharField(max_length=10)
-    nested = models.ForeignKey(Nested, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return 'Inner(id=%s %s)' % (self.id, self.name)
-
-
-class Outer(models.Model):
-    name = models.CharField(max_length=10)
-    inner = models.ForeignKey(Inner, on_delete=models.CASCADE)
+class Show(models.Model):
+    title = models.CharField(max_length=50)
+    writer = models.ForeignKey(Writer, on_delete=models.CASCADE)
 
     def __str__(self):
-        return 'Outer(id=%s %s)' % (self.id, self.name)
+        return 'Show(id=%s %s)' % (self.id, self.title)
+
+
+class Episode(models.Model):
+    name = models.CharField(max_length=50)
+    show = models.ForeignKey(Show, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return 'Episode(id=%s %s:%s)' % (self.id, self.show.title, 
+            self.name)

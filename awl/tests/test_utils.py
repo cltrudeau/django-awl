@@ -70,8 +70,6 @@ class UtilsTest(TestCase):
         result = get_field_names(Person)
         self.assertEqual(set(result), set(expected))
 
-        print(40*'=')
-
         # test ignore_auto, ignore_relations and exclude
         expected.extend(['id', 'building', 'address', 'courses', 'best_friend',
             'person'])

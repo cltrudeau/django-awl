@@ -1,3 +1,12 @@
+0.18.1
+======
+
+* fixed bug in admintools: django 2.0 admin requires explicit marking of 
+strings safe, some
+* updated sample_site and test models to be understandable classes (Books,
+Authors, etc.) instead of abstract (Inner, Outer, Nested)
+* updated sample_site to work with django 2.0
+
 0.18
 ====
 

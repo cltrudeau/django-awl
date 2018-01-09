@@ -1,6 +1,7 @@
 # awl.admintools.py
-from django.urls import reverse
 from django.template import Context, Template
+from django.urls import reverse
+from django.utils.html import format_html
 
 # ============================================================================
 
@@ -24,7 +25,7 @@ def admin_obj_link(obj, display=''):
     if display:
         text = display
 
-    return '<a href="%s">%s</a>' % (url, text)
+    return format_html('<a href="{}">{}</a>', url, text)
 
 
 def make_admin_obj_mixin(name):

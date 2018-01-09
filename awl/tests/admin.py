@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from awl.admintools import make_admin_obj_mixin
-from awl.tests.models import Link, Inner, Outer, Nested
+from awl.tests.models import Link, Author, Book, Chapter
 from awl.rankedmodel.admintools import admin_link_move_up, admin_link_move_down
 
 # ============================================================================
@@ -19,27 +19,27 @@ class LinkAdmin(admin.ModelAdmin):
 # Admintools Admin Models
 # ============================================================================
 
-@admin.register(Nested)
-class NestedAdmin(admin.ModelAdmin):
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
     list_display = ('name', )
 
 
-base = make_admin_obj_mixin('InnerMixin')
-base.add_obj_link('show_nested', 'nested')
+base = make_admin_obj_mixin('BookMixin')
+base.add_obj_link('show_author', 'author')
 
-@admin.register(Inner)
-class InnerAdmin(admin.ModelAdmin, base):
-    list_display = ('name', 'show_nested')
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin, base):
+    list_display = ('name', 'show_author')
 
 
-base = make_admin_obj_mixin('OuterMixin')
-base.add_obj_link('show_nested', 'inner__nested')
-base.add_obj_link('show_inner', 'inner', 'My Inner', 
+base = make_admin_obj_mixin('ChapterMixin')
+base.add_obj_link('show_author', 'book__author')
+base.add_obj_link('show_book', 'book', 'My Book', 
     '{{obj.classname}}.id={{obj.id}}')
 
-@admin.register(Outer)
-class OuterAdmin(admin.ModelAdmin, base):
-    list_display = ('name', 'show_inner', 'show_nested')
+@admin.register(Chapter)
+class ChapterAdmin(admin.ModelAdmin, base):
+    list_display = ('name', 'show_author', 'show_book')
 
 # ============================================================================
 # RankedModel Admin Models

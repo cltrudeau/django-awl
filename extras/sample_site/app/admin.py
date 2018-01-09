@@ -1,32 +1,33 @@
 from django.contrib import admin
 
-from app.models import Nested, Inner, Outer
+from app.models import Writer, Show, Episode
+from awl.tests.models import Nested, Inner, Outer
 from awl.admintools import make_admin_obj_mixin
 
-# Register your models here.
+# remove the awl.test admin files, they confuse things
+admin.site.unregister(Nested)
+admin.site.unregister(Inner)
+admin.site.unregister(Outer)
 
-@admin.register(Nested)
-class NestedAdmin(admin.ModelAdmin):
+
+@admin.register(Writer)
+class WriterAdmin(admin.ModelAdmin):
     list_display = ('name', )
 
 
-base = make_admin_obj_mixin('InnerMeta')
-base.add_obj_link('show_nested', 'nested')
+base = make_admin_obj_mixin('ShowMixin')
+base.add_obj_link('show_writer', 'writer')
 
-# ??? not sure what the filter was doing, attribute DNE anymore
-#base.add_obj_link('show_parents', 'outer', 'All Outer Parents', 
-#    attr_filter='outer__id')
-base.add_obj_link('show_parents', 'outer', 'All Outer Parents')
-
-@admin.register(Inner)
-class InnerAdmin(admin.ModelAdmin, base):
-    list_display = ('name', 'show_nested', 'show_parents')
+@admin.register(Show)
+class ShowAdmin(admin.ModelAdmin, base):
+    list_display = ('title', 'show_writer')
 
 
-base = make_admin_obj_mixin('OuterMeta')
-base.add_obj_link('show_nested', 'inner__nested', 'foo', 'nested={{obj.id}}')
-base.add_obj_link('show_inner', 'inner')
+base = make_admin_obj_mixin('EpisodeMixin')
+base.add_obj_link('show_writer', 'show__writer', 
+    'This is the Writer Column Title', 'writer={{obj.id}}')
+base.add_obj_link('show_show', 'show')
 
-@admin.register(Outer)
-class OuterAdmin(admin.ModelAdmin, base):
-    list_display = ('name', 'show_inner', 'show_nested')
+@admin.register(Episode)
+class EpisodeAdmin(admin.ModelAdmin, base):
+    list_display = ('name', 'show_writer', 'show_show')
