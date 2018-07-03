@@ -7,5 +7,11 @@ from django.core.management.base import BaseCommand
 from awl.waelsteng import create_admin
 
 class Command(BaseCommand):
+    """Creates a test admin user account by calling
+    :func:'awl.waelsteng.create_admin'"""
+
+    help = ('Creates a test admin user account by calling '
+        'awl.waelsteng.create_admin')
+
     def handle(self, *args, **options):
         create_admin()

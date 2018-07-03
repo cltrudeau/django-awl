@@ -8,11 +8,12 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   absmodels
    admintools
    context
    css_colours
    decorators
-   absmodels
+   commands
    models
    ranked
    tags

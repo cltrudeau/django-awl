@@ -63,8 +63,10 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Awl'
-copyright = '2015, Christopher Trudeau'
+
+from datetime import datetime
 author = 'Christopher Trudeau'
+copyright = '2015-%s, %s' % (datetime.now().year, author)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

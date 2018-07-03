@@ -3,7 +3,9 @@ import os, mock
 
 from django.contrib.auth.models import User
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, override_settings
+
+from waelstow import capture_stdout
 
 # ============================================================================
 
@@ -28,3 +30,22 @@ class CommandTests(TestCase):
         call_command('wipe_migrations')
 
         self.assertTrue(mocked_remove.called)
+
+    def test_print_setting(self):
+        with override_settings(FOO='thingy'):
+            with capture_stdout() as capture:
+                call_command('print_setting', 'FOO')
+
+            self.assertEqual(capture.getvalue(), 'thingy\n')
+
+        with override_settings(BAR=['one', 'two']):
+            with capture_stdout() as capture:
+                call_command('print_setting', 'BAR')
+
+            self.assertEqual(capture.getvalue(), 'one two\n')
+
+        with override_settings(BAZ=('three', 'four')):
+            with capture_stdout() as capture:
+                call_command('print_setting', 'BAZ')
+
+            self.assertEqual(capture.getvalue(), 'three four\n')

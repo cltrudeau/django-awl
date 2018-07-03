@@ -1,6 +1,6 @@
 #!/bin/bash
 
-coverage run -p --source=awl --omit="runtests.py" ./load_tests.py $@
+coverage run -p --source=awl ./load_tests.py $@
 if [ "$?" = "0" ]; then
     coverage combine
     echo -e "\n\n================================================"

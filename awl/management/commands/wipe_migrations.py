@@ -1,15 +1,20 @@
 # awl.managment.commands.wipe_migrations.py
 #
-# searches through the INSTALLED_APP listing looking for any apps that are in
-# the same base directory structure as the command and removes any migration
-# scripts belonging to them
 import os
 
-#from django.apps import apps
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
+
 class Command(BaseCommand):
+    """Searches through the INSTALLED_APP listing looking for any apps that
+    are in the same base directory structure as the command and removes any
+    migration scripts belonging to them.""" 
+
+    def __init__(self, *args, **kwargs):
+        super(Command, self).__init__(*args, **kwargs)
+        self.help = self.__doc__
+
     def handle(self, *args, **options):
         project_dir = settings.BASE_DIR
         search_dir = os.path.abspath(os.path.dirname(project_dir))

@@ -16,8 +16,8 @@ Installation
 Supports
 ========
 
-django-awl has been tested with Python 2.7, 3.5, 3.6 and Django 1.11 and
-2.0.
+django-awl has been tested with Django 1.11 using Python 2.7, 3.5, 3.6 and 
+Django 2.0 using Python 3.6.
 
 Docs & Source
 =============
