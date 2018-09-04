@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from awl.admintools import make_admin_obj_mixin
-from awl.tests.models import Link, Author, Book, Chapter
+from awl.admintools import make_admin_obj_mixin, fancy_modeladmin
+from awl.tests.models import (Link, Author, Book, Chapter, Driver,
+    VehicleMake, VehicleModel)
 from awl.rankedmodel.admintools import admin_link_move_up, admin_link_move_down
 
 # ============================================================================
@@ -44,6 +45,31 @@ base.add_obj_ref('readonly_book', 'book', 'Readonly Book',
 class ChapterAdmin(admin.ModelAdmin, base):
     list_display = ('name', 'show_author', 'show_book', 'readonly_author',
         'readonly_book')
+
+# ----------------------------------------------------------------------------
+
+base = fancy_modeladmin('id')
+base.add_displays('name')
+base.add_link('vehiclemodel__vehiclemake')
+base.add_link('vehiclemodel', 'My Vehicle Model', 
+    '{{obj.fullname}} id={{obj.id}}')
+base.add_object('vehiclemodel__vehiclemake')
+base.add_object('vehiclemodel', 'RO Vehicle Model', 
+    'RO {{obj.fullname}} id={{obj.id}}')
+
+@admin.register(Driver)
+class DriverAdmin(base):
+    pass
+
+
+@admin.register(VehicleMake)
+class VehicleMakeAdmin(base):
+    pass
+
+
+@admin.register(VehicleModel)
+class VehicleModelAdmin(base):
+    pass
 
 # ============================================================================
 # RankedModel Admin Models

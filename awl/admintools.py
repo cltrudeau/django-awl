@@ -1,4 +1,5 @@
 # awl.admintools.py
+from django.contrib.admin import ModelAdmin
 from django.template import Context, Template
 from django.urls import reverse
 from django.utils.html import format_html
@@ -227,4 +228,215 @@ def make_admin_obj_mixin(name):
     klass = type(name, (), {})
     klass.add_obj_link = add_obj_link
     klass.add_obj_ref = add_obj_ref
+    return klass
+
+# ============================================================================
+# Newer Admin Object Mechanism
+
+klass_count = 0
+
+class _FancyModelAdmin(ModelAdmin):
+    """A replacement for :class:`admin.ModelAdmin` which provides additional
+    methods for improving how the ``list_display`` attribute works. 
+
+    This class should not be instantiated directly, instead call 
+    :func:`fancy_list_display_modeladmin`.
+    """
+    list_display = []
+
+    @classmethod
+    def add_displays(cls, *args):
+        """Each arg is added to the ``list_display`` property without any
+        extra wrappers, using only the regular django functionality"""
+        for arg in args:
+            cls.list_display.append(arg)
+
+    @classmethod
+    def add_link(cls, attr, title='', display=''):
+        """Adds a ``list_display`` attribute that appears as a link to the
+        django admin change page for the type of object being shown. Supports
+        double underscore attribute name dereferencing.
+
+        :param attr:
+            Name of the attribute to dereference from the corresponding
+            object, i.e. what will be lined to.  This name supports double
+            underscore object link referencing for ``models.ForeignKey``
+            members.
+
+        :param title:
+            Title for the column of the django admin table.  If not given it
+            defaults to a capitalized version of ``attr``
+
+        :param display:
+            What to display as the text for the link being shown.  If not
+            given it defaults to the string representation of the object for
+            the row: ``str(obj)`` .  This parameter supports django
+            templating, the context for which contains a dictionary key named
+            "obj" with the value being the object for the row.
+
+        Example usage:
+
+        .. code-block:: python
+
+            # ---- admin.py file ----
+
+            base = fancy_modeladmin('id')
+            base.add_link('author', 'Our Authors',
+                '{{obj.name}} (id={{obj.id}})')
+
+            @admin.register(Book)
+            class BookAdmin(base):
+                pass
+
+        The django admin change page for the Book class would have a column
+        for "id" and another titled "Our Authors". The "Our Authors" column
+        would have a link for each Author object referenced by "book.author".
+        The link would go to the Author django admin change listing. The
+        display of the link would be the name of the author with the id in
+        brakcets, e.g. "Douglas Adams (id=42)"
+        """
+        global klass_count
+        klass_count += 1
+        fn_name = 'dyn_fn_%d' % klass_count
+        cls.list_display.append(fn_name)
+
+        if not title:
+            title = attr.capitalize()
+
+        # python scoping is a bit weird with default values, if it isn't
+        # referenced the inner function won't see it, so assign it for use
+        _display = display
+
+        def _link(self, obj):
+            field_obj = admin_obj_attr(obj, attr)
+            if not field_obj:
+                return ''
+
+            text = _obj_display(field_obj, _display)
+            return admin_obj_link(field_obj, text)
+        _link.short_description = title
+        _link.allow_tags = True
+        _link.admin_order_field = attr
+
+        setattr(cls, fn_name, _link)
+
+    @classmethod
+    def add_object(cls, attr, title='', display=''):
+        """Adds a ``list_display`` attribute showing an object.  Supports
+        double underscore attribute name dereferencing.
+
+        :param attr:
+            Name of the attribute to dereference from the corresponding
+            object, i.e. what will be lined to.  This name supports double
+            underscore object link referencing for ``models.ForeignKey``
+            members.
+
+        :param title:
+            Title for the column of the django admin table.  If not given it
+            defaults to a capitalized version of ``attr``
+
+        :param display:
+            What to display as the text for the link being shown.  If not
+            given it defaults to the string representation of the object for
+            the row: ``str(obj)``.  This parameter supports django templating,
+            the context for which contains a dictionary key named "obj" with
+            the value being the object for the row.
+        """
+        global klass_count
+        klass_count += 1
+        fn_name = 'dyn_fn_%d' % klass_count
+        cls.list_display.append(fn_name)
+
+        if not title:
+            title = attr.capitalize()
+
+        # python scoping is a bit weird with default values, if it isn't
+        # referenced the inner function won't see it, so assign it for use
+        _display = display
+
+        def _ref(self, obj):
+            field_obj = admin_obj_attr(obj, attr)
+            if not field_obj:
+                return ''
+
+            return _obj_display(field_obj, _display)
+        _ref.short_description = title
+        _ref.allow_tags = True
+        _ref.admin_order_field = attr
+
+        setattr(cls, fn_name, _ref)
+
+
+def fancy_modeladmin(*args):
+    """Returns a new copy of a :class:`_FancyModelAdmin` class (a class, not
+    an instance!). This can then be inherited from when declaring a model
+    admin class. The :class:`_FancyModelAdmin` class has additional methods
+    for managing the ``list_display`` attribute.
+
+    :param *args: [optional] any arguments given will be added to the
+        ``list_display`` property using regular django ``list_display``
+        functionality.
+
+    This function is meant as a replacement for :func:`make_admin_obj_mixin`,
+    it does everything the old one does with fewer bookkeeping needs for the
+    user as well as adding functionality.
+
+    Example usage:
+
+    .. code-block:: python
+
+        # ---- models.py file ----
+        class Author(models.Model):
+            name = models.CharField(max_length=100)
+
+
+        class Book(models.Model):
+            title = models.CharField(max_length=100)
+            author = models.ForeignKey(Author, on_delete=models.CASCADE)
+
+
+    .. code-block:: python
+
+        # ---- admin.py file ----
+        @admin.register(Author)
+        class Author(admin.ModelAdmin):
+            list_display = ('name', )
+
+
+        base = fany_list_display_modeladmin()
+        base.add_displays('id', 'name')
+        base.add_obj_link('author', 'Our Authors',
+            '{{obj.name}} (id={{obj.id}})')
+
+        @admin.register(Book)
+        class BookAdmin(base):
+            list_display = ('name', 'show_author')
+
+
+    A sample django admin page for "Book" would have the table:
+
+    +----+---------------------------------+------------------------+
+    | ID | Name                            | Our Authors            |
+    +====+=================================+========================+
+    |  1 | Hitchhikers Guide To The Galaxy | *Douglas Adams (id=1)* |
+    +----+---------------------------------+------------------------+
+    |  2 | War and Peace                   | *Tolstoy (id=2)*       |
+    +----+---------------------------------+------------------------+
+    |  3 | Dirk Gently                     | *Douglas Adams (id=1)* |
+    +----+---------------------------------+------------------------+
+
+
+    See :class:`_FancyModelAdmin` for a full list of functionality
+    provided by the returned base class.
+    """
+    global klass_count
+
+    klass_count += 1
+    name = 'DynamicAdminClass%d' % klass_count
+
+    # clone the admin class
+    klass = type(name, (_FancyModelAdmin,), {})
+    if len(args) > 0:
+        klass.add_displays(*args)
+
     return klass
