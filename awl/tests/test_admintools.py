@@ -78,14 +78,15 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         driver_admin = DriverAdmin(Driver, self.site)
 
         toyota = VehicleMake.objects.create(name='Toyota')
-        tercel = VehicleModel.objects.create(name='Tercel', 
-            vehiclemake=toyota, rating=0.95)
-        bob = Driver.objects.create(name='Bob', vehiclemodel=tercel)
+        tercel = VehicleModel.objects.create(name='Tercel', vehiclemake=toyota)
+        bob = Driver.objects.create(name='Bob', vehiclemodel=tercel, 
+            rating=0.35)
 
         vehiclemake_field = driver_admin.list_display[2]
         vehiclemodel_field = driver_admin.list_display[3]
         ro_vehiclemake_field = driver_admin.list_display[4]
         ro_vehiclemodel_field = driver_admin.list_display[5]
+        rating_field = driver_admin.list_display[6]
 
         # make sure we get a safe string
         html = self.field_value(driver_admin, bob, vehiclemake_field)
@@ -127,3 +128,6 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         result = self.field_value(driver_admin, fred, ro_vehiclemake_field)
         self.assertEqual('', result)
 
+        # check formatted field
+        result = self.field_value(driver_admin, bob, rating_field)
+        self.assertEqual('0.3', result)

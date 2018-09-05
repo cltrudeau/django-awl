@@ -56,6 +56,7 @@ base.add_link('vehiclemodel', 'My Vehicle Model',
 base.add_object('vehiclemodel__vehiclemake')
 base.add_object('vehiclemodel', 'RO Vehicle Model', 
     'RO {{obj.fullname}} id={{obj.id}}')
+base.add_formatted_field('rating', '%0.1f')
 
 @admin.register(Driver)
 class DriverAdmin(base):
