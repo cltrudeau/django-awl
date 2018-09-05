@@ -473,6 +473,7 @@ def fancy_modeladmin(*args):
 
     # clone the admin class
     klass = type(name, (FancyModelAdmin,), {})
+    klass.list_display = []
     if len(args) > 0:
         klass.add_displays(*args)
 

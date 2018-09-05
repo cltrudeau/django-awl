@@ -1,3 +1,21 @@
+0.21.1
+======
+
+* fixed a bug where multiple uses of fancy_modeladmin() resulted all classes
+using the same list_display field
+
+0.21
+====
+
+* added fancy_modeladmin() which is a replacement for make_admin_mixin, 
+simpler to use and supports other types of list_display modifiers
+
+0.20
+====
+
+* added print_setting django management command which prints django settings
+to the screen, useful for getting setting info into external scripts
+
 0.19
 ====
 

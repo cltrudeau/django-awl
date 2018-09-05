@@ -64,9 +64,11 @@ class DriverAdmin(base):
 
 
 @admin.register(VehicleMake)
-class VehicleMakeAdmin(base):
+class VehicleMakeAdmin(admin.ModelAdmin):
     pass
 
+
+base = fancy_modeladmin('id', 'name')
 
 @admin.register(VehicleModel)
 class VehicleModelAdmin(base):
