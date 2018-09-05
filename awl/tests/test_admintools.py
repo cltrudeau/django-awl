@@ -8,7 +8,8 @@ from screwdriver import parse_link
 from awl.waelsteng import AdminToolsMixin
 from awl.tests.models import (Author, Book, Chapter, Driver, VehicleMake, 
     VehicleModel)
-from awl.tests.admin import BookAdmin, ChapterAdmin, DriverAdmin
+from awl.tests.admin import (BookAdmin, ChapterAdmin, DriverAdmin,
+    VehicleModelAdmin)
 
 # ============================================================================
 
@@ -76,9 +77,11 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         self.initiate()
 
         driver_admin = DriverAdmin(Driver, self.site)
+        vehiclemodel_admin = VehicleModelAdmin(VehicleModel, self.site)
 
         toyota = VehicleMake.objects.create(name='Toyota')
-        tercel = VehicleModel.objects.create(name='Tercel', vehiclemake=toyota)
+        tercel = VehicleModel.objects.create(name='Tercel', vehiclemake=toyota,
+            year=1999)
         bob = Driver.objects.create(name='Bob', vehiclemodel=tercel, 
             rating=0.35)
 
@@ -87,6 +90,8 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         ro_vehiclemake_field = driver_admin.list_display[4]
         ro_vehiclemodel_field = driver_admin.list_display[5]
         rating_field = driver_admin.list_display[6]
+
+        year_field = vehiclemodel_admin.list_display[2]
 
         # make sure we get a safe string
         html = self.field_value(driver_admin, bob, vehiclemake_field)
@@ -131,3 +136,10 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         # check formatted field
         result = self.field_value(driver_admin, bob, rating_field)
         self.assertEqual('0.3', result)
+
+        # check display with title
+        result = self.field_value(vehiclemodel_admin, tercel, year_field)
+        self.assertEqual(1999, result)
+
+        label = label_for_field(year_field, tercel, vehiclemodel_admin)
+        self.assertEqual(label, 'YEAR TITLE')

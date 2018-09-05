@@ -64,6 +64,7 @@ class VehicleMake(models.Model):
 @python_2_unicode_compatible
 class VehicleModel(models.Model):
     name = models.CharField(max_length=20)
+    year = models.PositiveIntegerField()
     vehiclemake = models.ForeignKey(VehicleMake, null=True, blank=True,
         on_delete=models.CASCADE)
 

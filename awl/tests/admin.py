@@ -68,7 +68,9 @@ class VehicleMakeAdmin(admin.ModelAdmin):
     pass
 
 
-base = fancy_modeladmin('id', 'name')
+base = fancy_modeladmin('id')
+base.add_display('name')
+base.add_display('year', 'YEAR TITLE')
 
 @admin.register(VehicleModel)
 class VehicleModelAdmin(base):

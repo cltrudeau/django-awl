@@ -1,3 +1,9 @@
+0.22
+====
+
+* added ability to change the title for a list_display item using 
+fancy_modeladmin() 
+
 0.21.1
 ======
 
