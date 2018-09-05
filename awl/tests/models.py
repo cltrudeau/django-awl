@@ -75,7 +75,6 @@ class VehicleModel(models.Model):
         return '%s %s' % (self.vehiclemake.name, self.name)
 
 
-@python_2_unicode_compatible
 class Driver(models.Model):
     name = models.CharField(max_length=20)
     vehiclemodel = models.ForeignKey(VehicleModel, null=True, blank=True,

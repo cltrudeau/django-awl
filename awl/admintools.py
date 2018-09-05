@@ -235,12 +235,12 @@ def make_admin_obj_mixin(name):
 
 klass_count = 0
 
-class _FancyModelAdmin(ModelAdmin):
+class FancyModelAdmin(ModelAdmin):
     """A replacement for :class:`admin.ModelAdmin` which provides additional
     methods for improving how the ``list_display`` attribute works. 
 
     This class should not be instantiated directly, instead call 
-    :func:`fancy_list_display_modeladmin`.
+    :func:`fancy_modeladmin`.
     """
     list_display = []
 
@@ -405,12 +405,12 @@ class _FancyModelAdmin(ModelAdmin):
 
 
 def fancy_modeladmin(*args):
-    """Returns a new copy of a :class:`_FancyModelAdmin` class (a class, not
+    """Returns a new copy of a :class:`FancyModelAdmin` class (a class, not
     an instance!). This can then be inherited from when declaring a model
-    admin class. The :class:`_FancyModelAdmin` class has additional methods
+    admin class. The :class:`FancyModelAdmin` class has additional methods
     for managing the ``list_display`` attribute.
 
-    :param *args: [optional] any arguments given will be added to the
+    :param ``*args``: [optional] any arguments given will be added to the
         ``list_display`` property using regular django ``list_display``
         functionality.
 
@@ -463,7 +463,7 @@ def fancy_modeladmin(*args):
     +----+---------------------------------+------------------------+
 
 
-    See :class:`_FancyModelAdmin` for a full list of functionality
+    See :class:`FancyModelAdmin` for a full list of functionality
     provided by the returned base class.
     """
     global klass_count
@@ -472,7 +472,7 @@ def fancy_modeladmin(*args):
     name = 'DynamicAdminClass%d' % klass_count
 
     # clone the admin class
-    klass = type(name, (_FancyModelAdmin,), {})
+    klass = type(name, (FancyModelAdmin,), {})
     if len(args) > 0:
         klass.add_displays(*args)
 
