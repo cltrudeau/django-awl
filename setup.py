@@ -35,7 +35,7 @@ SETUP_ARGS = dict(
         'logthing>=0.10.1',
         'screwdriver>=0.11.0',
         'six>=1.11',
-        'waelstow>=0.10.1',
+        'waelstow>=0.10.2',
     ],
     tests_require=[
         'mock>=2.0.0',

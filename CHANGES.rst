@@ -1,3 +1,10 @@
+0.22.1
+======
+
+* test labels weren't working properly, due to a problem in waelstow the 
+bug was hidden; waelstow 0.10.2 fixes the issue; WRunner.build_suite() 
+could be vastly simplified with the change as well
+
 0.22
 ====
 

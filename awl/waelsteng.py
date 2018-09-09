@@ -262,7 +262,10 @@ class AdminToolsMixin(object):
 # ============================================================================
 
 class WRunner(DiscoverRunner):
+    #
     # documentation for this is directly in docs/waelsteng.rst
+    #
+
     def __init__(self, **kwargs):
         if 'verbosity' not in kwargs:
             kwargs['verbosity'] = 2
@@ -298,29 +301,12 @@ class WRunner(DiscoverRunner):
             shutil.rmtree(self.test_media_root)
 
     def build_suite(self, test_labels, extra_tests=None, **kwargs):
-        shortcut_labels = []
-        full_labels = []
-        for label in test_labels:
-            if label.startswith('='):
-                shortcut_labels.append(label)
-            else:
-                full_labels.append(label)
-
-        shortcut_tests = []
-        if shortcut_labels:
-            suite = super(WRunner, self).build_suite([], extra_tests, **kwargs)
-            shortcut_tests = find_shortcut_tests(suite, shortcut_labels)
-
-        if full_labels:
-            suite = super(WRunner, self).build_suite(full_labels, extra_tests,
-                **kwargs)
-            suite.addTests(shortcut_tests)
-        elif shortcut_tests:
-            # only have shortcut labels
+        # find default full suite
+        suite = super(WRunner, self).build_suite([], extra_tests, **kwargs)
+        if test_labels:
+            # just do the test cases for the given labels
+            shortcut_tests = find_shortcut_tests(suite, test_labels)
             suite = TestSuite(shortcut_tests)
-        else:
-            # no labels at all, do the default
-            suite = super(WRunner, self).build_suite([], extra_tests, **kwargs)
 
         # parent implementation reorders, so we'll do it too
         return reorder_suite(suite, self.reorder_by)

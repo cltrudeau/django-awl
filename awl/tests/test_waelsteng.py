@@ -109,9 +109,9 @@ class WRunnerTest(TestCase):
     @override_settings(WRUNNER=wrunner_settings)
     def test_runner(self):
         # this is going to get ugly... we're using the runner right now, so to
-        # test the nooks and crannies we have create another one; django, as
-        # of 1.11 doesn't like you to do this, so we'll mock out super() to
-        # stop the parent from getting invoked
+        # test the nooks and crannies we have create another one; django 11
+        # doesn't like you to do this, so we'll mock out super() to stop the
+        # parent from getting invoked
 
         name = '%s.super' % six.moves.builtins.__name__
         fake_runner = WRunner()
@@ -152,23 +152,20 @@ class WRunnerTest(TestCase):
 
         real_runner = WRunner()
 
-        # -- test various labels work
+        # -- test method and class shortcut labels as well as full test names
+        # works
         expected = [
             'test_same_order (awl.tests.test_ranked.GroupedTests)',
             'test_same_order (awl.tests.test_ranked.AloneTests)',
             'test_too_large (awl.tests.test_ranked.GroupedTests)',
+            'test_create_admin (awl.tests.test_commands.CommandTests)',
+            'test_run_script (awl.tests.test_commands.CommandTests)',
+            'test_wipe_migrations (awl.tests.test_commands.CommandTests)',
+            'test_print_setting (awl.tests.test_commands.CommandTests)',
         ]
         suite = real_runner.build_suite([
             'awl.tests.test_ranked.GroupedTests.test_too_large',
-            '=_same_order'])
-        self.assert_test_strings(expected, suite)
-
-        # shortcuts only
-        expected = [
-            'test_same_order (awl.tests.test_ranked.GroupedTests)',
-            'test_same_order (awl.tests.test_ranked.AloneTests)',
-        ]
-        suite = real_runner.build_suite(['=_same_order'])
+            '=_same_order', '=Command'])
         self.assert_test_strings(expected, suite)
 
         # test no labels at all
