@@ -1,3 +1,9 @@
+0.22.2
+======
+
+* updated minimum library requirements for django 2.0.2 and 2.1.2 to reflect
+security updates
+
 0.22.1
 ======
 
