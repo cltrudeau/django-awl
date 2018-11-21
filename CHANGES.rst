@@ -1,3 +1,8 @@
+0.23.0
+======
+
+* added json_post_required() decorator
+
 0.22.2
 ======
 

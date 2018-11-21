@@ -1,29 +1,32 @@
 # awl.tests.test_decorators.py
+import json
 
 from django.test import TestCase
 from django.http import Http404
 
-from awl.decorators import post_required
+from awl.decorators import post_required, json_post_required
 from awl.waelsteng import FakeRequest
 from logthing.utils import silence_logging
 
 # ============================================================================
 
-class Worked1(Exception):
-    pass
-
-class Worked2(Exception):
+class Worked(Exception):
     pass
 
 
 @post_required
-def view1(request):
-    raise Worked1()
+def post_view1(request):
+    raise Worked()
 
 
 @post_required(['foo'])
-def view2(request):
-    raise Worked2()
+def post_view2(request):
+    raise Worked()
+
+
+@json_post_required('json_data', 'deserialized')
+def json_post_view(request):
+    return request.deserialized
 
 # ============================================================================
 
@@ -32,18 +35,36 @@ class DecoratorTest(TestCase):
     def test_post_required(self):
         request = FakeRequest()
         with self.assertRaises(Http404):
-            view1(request)
+            post_view1(request)
 
         request = FakeRequest(method='POST')
-        with self.assertRaises(Worked1):
-            view1(request)
+        with self.assertRaises(Worked):
+            post_view1(request)
 
         request = FakeRequest(method='POST', data={ 'foo':'bar', })
-        with self.assertRaises(Worked2):
-            view2(request)
+        with self.assertRaises(Worked):
+            post_view2(request)
 
         request.POST = {
             'bar':'bar',
         }
         with self.assertRaises(Http404):
-            view2(request)
+            post_view2(request)
+
+    @silence_logging
+    def test_json_post_required(self):
+        request = FakeRequest()
+        with self.assertRaises(Http404):
+            json_post_view(request)
+
+        request = FakeRequest(method='POST')
+        with self.assertRaises(Http404):
+            json_post_view(request)
+
+        content = { 'foo':'bar', }
+        data = {
+            'json_data':json.dumps(content),
+        }
+        request = FakeRequest(method='POST', data=data)
+        result = json_post_view(request)
+        self.assertEqual(content, result)
