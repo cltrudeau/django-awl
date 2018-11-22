@@ -1,3 +1,8 @@
+0.23.1
+======
+
+* made second parameter to json_post_required decorator optional
+
 0.23.0
 ======
 

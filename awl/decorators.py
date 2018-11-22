@@ -70,9 +70,9 @@ def post_required(method_or_options=[]):
     return decorator
 
 
-def json_post_required(field, request_name):
+def json_post_required(*decorator_args):
     """View decorator that enforces that the method was called using POST and
-    contains a single field containing a JSON dictionary. This method should
+    contains a field containing a JSON dictionary. This method should
     only be used to wrap views and assumes the first argument of the method
     being wrapped is a ``request`` object.
 
@@ -85,12 +85,19 @@ def json_post_required(field, request_name):
     :param field:
         The name of the POST field that contains a JSON dictionary
     :param request_name:
-        Name of the parameter on the request to put the deserialized JSON data
+        [optional] Name of the parameter on the request to put the
+        deserialized JSON data. If not given the field name is used
 
     """
     def decorator(method):
         @wraps(method)
         def wrapper(*args, **kwargs):
+            field = decorator_args[0]
+            if len(decorator_args) == 2:
+                request_name = decorator_args[1]
+            else:
+                request_name = field
+
             request = args[0]
             if request.method != 'POST':
                 logger.error('POST required for this url')

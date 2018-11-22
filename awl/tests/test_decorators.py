@@ -28,6 +28,11 @@ def post_view2(request):
 def json_post_view(request):
     return request.deserialized
 
+
+@json_post_required('json_data')
+def json_post_view2(request):
+    return request.json_data
+
 # ============================================================================
 
 class DecoratorTest(TestCase):
@@ -53,18 +58,25 @@ class DecoratorTest(TestCase):
 
     @silence_logging
     def test_json_post_required(self):
+        # check that it ensures POST
         request = FakeRequest()
         with self.assertRaises(Http404):
             json_post_view(request)
 
+        # check that it ensures post data
         request = FakeRequest(method='POST')
         with self.assertRaises(Http404):
             json_post_view(request)
 
+        # good case
         content = { 'foo':'bar', }
         data = {
             'json_data':json.dumps(content),
         }
         request = FakeRequest(method='POST', data=data)
         result = json_post_view(request)
+        self.assertEqual(content, result)
+
+        # good case with optional request_name
+        result = json_post_view2(request)
         self.assertEqual(content, result)
