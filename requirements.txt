@@ -1,7 +1,7 @@
 # These requirements are for running tests and the sample_site, the library 
 # itself only needs a subset, see setup.py for that list
 coverage==4.5.1
-Django==2.1.2
+Django==2.1.10
 logthing==0.10.1
 mock==2.0.0
 pudb==2018.1

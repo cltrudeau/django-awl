@@ -1,3 +1,8 @@
+0.23.2
+======
+
+* updated version of django in tests
+
 0.23.1
 ======
 
