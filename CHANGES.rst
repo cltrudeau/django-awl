@@ -1,3 +1,8 @@
+NEXT
+====
+
+* cosmetic changes to django management command template used in create_cmd
+
 0.24.0
 ======
 

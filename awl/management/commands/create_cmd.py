@@ -41,7 +41,7 @@ class Command(BaseCommand):
             help='First argument')
 
     def handle(self, *args, **options):
-        project_dir = settings.BASE_DIR
+        base_dir = settings.BASE_DIR
 
         # code for your command goes here
         first_arg = options['first_arg']
@@ -68,9 +68,7 @@ class Command(BaseCommand):
             help='Name of command to create, defaults to "cmd"')
 
     def handle(self, *args, **options):
-        project_dir = settings.BASE_DIR
-
-        app_dir = os.path.join(project_dir, options['app_name'])
+        app_dir = os.path.join(settings.BASE_DIR, options['app_name'])
         if not os.path.isdir(app_dir):
             raise CommandError('No such app found: %s' % options['app_name'])
 
