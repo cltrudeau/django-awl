@@ -1,10 +1,12 @@
 # awl.tests.test_commands.py
 import os, mock
 
+from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.management import call_command
+from django.core.management import call_command, CommandError
 from django.test import TestCase, override_settings
 
+from context_temp import temp_directory
 from waelstow import capture_stdout
 
 # ============================================================================
@@ -49,3 +51,37 @@ class CommandTests(TestCase):
                 call_command('print_setting', 'BAZ')
 
             self.assertEqual(capture.getvalue(), 'three four\n')
+
+    def test_create_cmd(self):
+        with temp_directory(path=settings.BASE_DIR) as td:
+            app_name = os.path.basename(td)
+            mgm_dir = os.path.join(td, 'management')
+            mgm_init = os.path.join(mgm_dir, '__init__.py')
+            cmd_dir = os.path.join(mgm_dir, 'commands')
+            cmd_init = os.path.join(cmd_dir, '__init__.py')
+            cmd_file = os.path.join(cmd_dir, 'cmd.py')
+            named_file = os.path.join(cmd_dir, 'named.py')
+
+            # test from scratch
+            call_command('create_cmd', app_name)
+            self.assertTrue(os.path.isdir(mgm_dir))
+            self.assertTrue(os.path.isfile(mgm_init))
+            self.assertTrue(os.path.isdir(cmd_dir))
+            self.assertTrue(os.path.isfile(cmd_init))
+            self.assertTrue(os.path.isfile(cmd_file))
+
+            # test with named file on existing structure
+            call_command('create_cmd', app_name, 'named')
+            self.assertTrue(os.path.isfile(named_file))
+
+            # test bad app name
+            with self.assertRaises(CommandError) as cm:
+                call_command('create_cmd', 'foo')
+
+            self.assertIn('No such app', cm.exception.args[0])
+
+            # test no file over-write
+            with self.assertRaises(CommandError) as cm:
+                call_command('create_cmd', app_name)
+
+            self.assertIn('already existed', cm.exception.args[0])

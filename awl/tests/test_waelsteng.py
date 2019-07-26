@@ -159,6 +159,7 @@ class WRunnerTest(TestCase):
             'test_same_order (awl.tests.test_ranked.AloneTests)',
             'test_too_large (awl.tests.test_ranked.GroupedTests)',
             'test_create_admin (awl.tests.test_commands.CommandTests)',
+            'test_create_cmd (awl.tests.test_commands.CommandTests)',
             'test_run_script (awl.tests.test_commands.CommandTests)',
             'test_wipe_migrations (awl.tests.test_commands.CommandTests)',
             'test_print_setting (awl.tests.test_commands.CommandTests)',

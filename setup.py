@@ -39,6 +39,7 @@ SETUP_ARGS = dict(
     ],
     tests_require=[
         'mock>=2.0.0',
+        'context-temp>=0.11.0',
     ]
 )
 

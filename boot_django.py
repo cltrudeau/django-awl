@@ -30,7 +30,9 @@ def boot_django():
             'django.contrib.auth',
             'django.contrib.contenttypes',
             'django.contrib.sessions',
+            'django.contrib.messages',
             'django.contrib.admin',
+            
             'awl',
             'awl.tests',
         ),

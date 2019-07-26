@@ -1,3 +1,8 @@
+0.24.0
+======
+
+* added django command for creating django commands
+
 0.23.2
 ======
 
