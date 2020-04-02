@@ -54,6 +54,7 @@ then destoryed upon test completion.
 If ``TEST_DATA`` is set, then the named function is loaded and run after the
 database is created.  This hook can be used to create test data.
 
-Shortcut test labels (using :func:`wrench.waelstow.find_shortcut_tests`) are
-supported by this runner.  Any label that starts with "=" is checked against
-all tests for substring matches.  
+Shortcut test labels (using `waelstow.find_shortcut_tests()
+<https://waelstow.readthedocs.io/en/latest/#waelstow.find_shortcut_tests>`_)
+are supported by this runner.  Any label that starts with "=" is checked
+against all tests for substring matches.  
