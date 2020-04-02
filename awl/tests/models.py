@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 from awl.absmodels import ValidatingMixin
 from awl.rankedmodel.models import RankedModel
@@ -24,7 +23,6 @@ class Validator(ValidatingMixin, models.Model):
 # Admintools Models 
 # ============================================================================
 
-@python_2_unicode_compatible
 class Author(models.Model):
     name = models.CharField(max_length=20)
 
@@ -32,7 +30,6 @@ class Author(models.Model):
         return 'Author(id=%s %s)' % (self.id, self.name)
 
 
-@python_2_unicode_compatible
 class Book(models.Model):
     name = models.CharField(max_length=20)
     author = models.ForeignKey(Author, null=True, blank=True,
@@ -53,7 +50,6 @@ class Chapter(models.Model):
 
 # ----------------------------------------------------------------------------
 
-@python_2_unicode_compatible
 class VehicleMake(models.Model):
     name = models.CharField(max_length=20)
 
@@ -61,7 +57,6 @@ class VehicleMake(models.Model):
         return 'VehicleMake(id=%s %s)' % (self.id, self.name)
 
 
-@python_2_unicode_compatible
 class VehicleModel(models.Model):
     name = models.CharField(max_length=20)
     year = models.PositiveIntegerField()

@@ -1,4 +1,5 @@
-import os, tempfile, shutil, mock, six, unittest
+import os, tempfile, shutil, unittest
+from unittest import mock
 from django.contrib import messages
 from django.test import TestCase, override_settings
 
@@ -109,13 +110,12 @@ class WRunnerTest(TestCase):
     @override_settings(WRUNNER=wrunner_settings)
     def test_runner(self):
         # this is going to get ugly... we're using the runner right now, so to
-        # test the nooks and crannies we have create another one; django 11
+        # test the nooks and crannies we have create another one; django 
         # doesn't like you to do this, so we'll mock out super() to stop the
         # parent from getting invoked
 
-        name = '%s.super' % six.moves.builtins.__name__
         fake_runner = WRunner()
-        with mock.patch(name):
+        with mock.patch('builtins.super'):
             fake_runner.setup_test_environment()
 
             # check test data loader
@@ -142,7 +142,7 @@ class WRunnerTest(TestCase):
         fake_runner.run_suite(suite)
 
         # -- check media root cleanup
-        with mock.patch(name):
+        with mock.patch('builtins.super'):
             fake_runner.teardown_databases(old_config=[])
             self.assertFalse(os.path.exists(fake_runner.test_media_root))
 

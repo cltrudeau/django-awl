@@ -1,8 +1,8 @@
 # awl.tests.test_utils.py
 import sys
-from django.test import TestCase
+from io import StringIO
 
-from six import StringIO
+from django.test import TestCase
 
 from awl.tests.models import Link
 from awl.utils import (URLTree, refetch, refetch_for_update, render_page,

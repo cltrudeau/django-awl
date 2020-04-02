@@ -1,4 +1,3 @@
-import six
 from itertools import islice, chain
 from django.db import models, transaction
 
@@ -115,8 +114,7 @@ class _ChoicesType(type):
             yield (name, value)
 
 
-@six.add_metaclass(_ChoicesType)
-class Choices(object):
+class Choices(metaclass=_ChoicesType):
     """A tuple of tuples pattern of ((id1, string1), (id2, string2)...)  is
     common in django for choices fields, etc.  This object inspects its own
     members (i.e. the inheritors) and produces the corresponding tuples.
@@ -170,7 +168,7 @@ class Choices(object):
 # borrowed and modified from:
 #   http://stackoverflow.com/questions/431628/
 #   by: http://stackoverflow.com/users/15770/akaihola
-class QuerySetChain(object):
+class QuerySetChain:
     """
     Chains together multiple querysets (possibly of different models) and 
     behaves as one queryset.  Supports minimal methods needed for use with

@@ -22,9 +22,9 @@ SETUP_ARGS = dict(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
@@ -34,11 +34,9 @@ SETUP_ARGS = dict(
         'Django>=1.11',
         'logthing>=0.10.1',
         'screwdriver>=0.11.0',
-        'six>=1.11',
         'waelstow>=0.10.2',
     ],
     tests_require=[
-        'mock>=2.0.0',
         'context-temp>=0.11.0',
     ]
 )

@@ -1,7 +1,10 @@
-NEXT
-====
+1.0
+===
 
+* dropped support for Python 2 and Django 1.11
 * cosmetic changes to django management command template used in create_cmd
+* update minimum Django version in compliance with security alerts
+* fixed some links in documentation
 
 0.24.0
 ======

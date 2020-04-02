@@ -1,5 +1,6 @@
 # awl.tests.test_commands.py
-import os, mock
+import os
+from unittest import mock
 
 from django.conf import settings
 from django.contrib.auth.models import User
