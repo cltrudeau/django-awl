@@ -115,7 +115,13 @@ class _ChoicesType(type):
 
 
 class Choices(metaclass=_ChoicesType):
-    """A tuple of tuples pattern of ((id1, string1), (id2, string2)...)  is
+    """
+    .. note::
+        Django 3.0 added `Enumeration Types <https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types>`_
+        which solves the same problem as this class. You should probably use
+        it instead.
+
+    A tuple of tuples pattern of ((id1, string1), (id2, string2)...)  is
     common in django for choices fields, etc.  This object inspects its own
     members (i.e. the inheritors) and produces the corresponding tuples.
 

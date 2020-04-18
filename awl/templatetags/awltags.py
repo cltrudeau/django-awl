@@ -35,6 +35,7 @@ def getitem(dictionary, keyvar):
     except KeyError:
         return ''
 
+# ----------------------------------------------------------------------------
 
 @register.tag
 def accessor(parser, token):
@@ -122,3 +123,16 @@ class AccessorNode(template.Node):
                 context[self.as_var] = ''
 
             return ''
+
+# ----------------------------------------------------------------------------
+
+@register.simple_tag
+def nop(*args):
+    """This tag does nothing. Useful for a comment without having to build a
+    full comment block. All parameters are ignored.
+
+    Example::
+
+        {% nop 'this is a string' %}
+    """
+    return ''

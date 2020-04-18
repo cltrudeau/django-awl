@@ -1,3 +1,10 @@
+1.1.0
+=====
+
+* update documentation for Choices object now that Django 3.0 has something
+similar
+* add {% nop %} template tag
+
 1.0
 ===
 

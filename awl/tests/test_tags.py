@@ -113,3 +113,11 @@ class TagTests(TestCase):
         result = template.render(context)
         self.assertEqual('', result.strip())
         self.assertEqual('', context['thing'])
+
+    def test_nop(self):
+        t = "{% load awltags %}{% nop 'thing and stuff' %}"
+        
+        template = Template(t)
+        context = Context({})
+        result = template.render(context)
+        self.assertEqual('', result)
