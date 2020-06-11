@@ -1,3 +1,10 @@
+1.2.0
+=====
+
+* add admintools link feature that gives a link to a filter of foreign keys
+* cleaned up some documentation
+* set the minimum Django level correctly in setup.py
+
 1.1.0
 =====
 

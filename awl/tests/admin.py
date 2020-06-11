@@ -71,6 +71,9 @@ class VehicleMakeAdmin(admin.ModelAdmin):
 base = fancy_modeladmin('id')
 base.add_display('name')
 base.add_display('year', 'YEAR TITLE')
+base.add_fk_link('driver_set', Driver)
+base.add_fk_link('driver_set', Driver, 'Driver Title',
+    '{{row.name}} {{count}} {{title}}')
 
 @admin.register(VehicleModel)
 class VehicleModelAdmin(base):

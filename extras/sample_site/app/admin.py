@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from app.models import Writer, Show, Episode
 from awl.tests.models import Author, Book, Chapter
-from awl.admintools import make_admin_obj_mixin
+from awl.admintools import make_admin_obj_mixin, fancy_modeladmin
 
 # remove the awl.test admin files, they confuse things
 admin.site.unregister(Author)
@@ -15,21 +15,21 @@ class WriterAdmin(admin.ModelAdmin):
     list_display = ('name', )
 
 
-base = make_admin_obj_mixin('ShowMixin')
-base.add_obj_link('show_writer', 'writer')
+base = fancy_modeladmin('title')
+base.add_fk_link('episode_set', Episode)
 
 @admin.register(Show)
-class ShowAdmin(admin.ModelAdmin, base):
-    list_display = ('title', 'show_writer')
+class ShowAdmin(base):
+    pass
 
 
-base = make_admin_obj_mixin('EpisodeMixin')
-base.add_obj_link('show_writer', 'show__writer', 
-    'This is the Writer Column Title', 'writer={{obj.id}}')
-base.add_obj_link('show_show', 'show')
-base.add_obj_ref('show_writer_name', 'show__writer', 
-    'Read-Only Writer Column', '{{obj.name}} (id={{obj.id}})')
+base = fancy_modeladmin('name')
+base.add_link('show__writer', 'This is the Writer Column Title', 
+    'writer={{obj.id}}')
+base.add_link('show')
+base.add_object('show__writer', 'Read-Only Writer Column', 
+    '{{obj.name}} (id={{obj.id}})')
 
 @admin.register(Episode)
-class EpisodeAdmin(admin.ModelAdmin, base):
-    list_display = ('name', 'show_writer', 'show_show', 'show_writer_name')
+class EpisodeAdmin(base):
+    pass

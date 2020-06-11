@@ -92,6 +92,8 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         rating_field = driver_admin.list_display[6]
 
         year_field = vehiclemodel_admin.list_display[2]
+        default_set_field = vehiclemodel_admin.list_display[3]
+        custom_set_field = vehiclemodel_admin.list_display[4]
 
         # make sure we get a safe string
         html = self.field_value(driver_admin, bob, vehiclemake_field)
@@ -143,3 +145,23 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
 
         label = label_for_field(year_field, tercel, vehiclemodel_admin)
         self.assertEqual(label, 'YEAR TITLE')
+
+        # Validate the add_fk_link method with default values
+        html = self.field_value(vehiclemodel_admin, tercel,
+            default_set_field)
+        url, text = parse_link(html)
+        self.assertEqual('1 Driver', text)
+        self.assertEqual('/admin/tests/driver/?vehiclemodel__id=1', url)
+
+        label = label_for_field(default_set_field, tercel, vehiclemodel_admin)
+        self.assertEqual('Driver', label)
+
+        # Validate the add_fk_link method with custom values
+        html = self.field_value(vehiclemodel_admin, tercel,
+            custom_set_field)
+        url, text = parse_link(html)
+        self.assertEqual('Tercel 1 Driver Title', text)
+        self.assertEqual('/admin/tests/driver/?vehiclemodel__id=1', url)
+
+        label = label_for_field(custom_set_field, tercel, vehiclemodel_admin)
+        self.assertEqual('Driver Title', label)

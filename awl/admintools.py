@@ -46,7 +46,7 @@ def admin_obj_attr(obj, attr):
     return field_obj
 
 
-def _obj_display(obj, display=''):
+def _obj_display(obj, display='', extra_context={}):
     """Returns string representation of an object, either the default or based
     on the display template passed in.
     """
@@ -55,14 +55,21 @@ def _obj_display(obj, display=''):
         result = str(obj)
     else:
         template = Template(display)
-        context = Context({'obj':obj})
+
+        context_dict = {
+            'obj':obj,
+        }
+        context_dict.update(extra_context)
+        context = Context(context_dict)
         result = template.render(context)
 
     return result
 
 
 def make_admin_obj_mixin(name):
-    """This method dynamically creates a mixin to be used with your 
+    """DEPRECATED!!! Use fancy_modeladmin() instead.
+
+    This method dynamically creates a mixin to be used with your 
     :class:`ModelAdmin` classes.  The mixin provides utility methods that can
     be referenced in side of the admin object's ``list_display`` and other
     similar attributes.
@@ -188,19 +195,15 @@ def make_admin_obj_mixin(name):
         if not title:
             title = attr.capitalize()
 
-        # python scoping is a bit weird with default values, if it isn't
-        # referenced the inner function won't see it, so assign it for use
-        _display = display
-
         def _link(self, obj):
             field_obj = admin_obj_attr(obj, attr)
             if not field_obj:
                 return ''
 
-            text = _obj_display(field_obj, _display)
+            nonlocal display
+            text = _obj_display(field_obj, display)
             return admin_obj_link(field_obj, text)
         _link.short_description = title
-        _link.allow_tags = True
         _link.admin_order_field = attr
 
         setattr(cls, funcname, _link)
@@ -210,18 +213,14 @@ def make_admin_obj_mixin(name):
         if not title:
             title = attr.capitalize()
 
-        # python scoping is a bit weird with default values, if it isn't
-        # referenced the inner function won't see it, so assign it for use
-        _display = display
-
         def _ref(self, obj):
             field_obj = admin_obj_attr(obj, attr)
             if not field_obj:
                 return ''
 
-            return _obj_display(field_obj, _display)
+            nonlocal display
+            return _obj_display(field_obj, display)
         _ref.short_description = title
-        _ref.allow_tags = True
         _ref.admin_order_field = attr
 
         setattr(cls, funcname, _ref)
@@ -246,6 +245,14 @@ class FancyModelAdmin(ModelAdmin):
     list_display = []
 
     @classmethod
+    def _new_func_name(cls):
+        global klass_count
+        klass_count += 1
+        fn_name = 'dyn_fn_%d' % klass_count
+        cls.list_display.append(fn_name)
+        return fn_name
+
+    @classmethod
     def add_displays(cls, *args):
         """Each arg is added to the ``list_display`` property without any
         extra wrappers, using only the regular django functionality"""
@@ -264,10 +271,7 @@ class FancyModelAdmin(ModelAdmin):
             Title for the column of the django admin table.  If not given it
             defaults to a capitalized version of ``attr``
         """
-        global klass_count
-        klass_count += 1
-        fn_name = 'dyn_fn_%d' % klass_count
-        cls.list_display.append(fn_name)
+        fn_name = cls._new_func_name()
 
         if not title:
             title = attr.capitalize()
@@ -277,7 +281,6 @@ class FancyModelAdmin(ModelAdmin):
             _, _, value = lookup_field(attr, obj, cls)
             return value
         _ref.short_description = title
-        _ref.allow_tags = True
         _ref.admin_order_field = attr
 
         setattr(cls, fn_name, _ref)
@@ -285,12 +288,12 @@ class FancyModelAdmin(ModelAdmin):
     @classmethod
     def add_link(cls, attr, title='', display=''):
         """Adds a ``list_display`` attribute that appears as a link to the
-        django admin change page for the type of object being shown. Supports
+        Django admin change list, filtered to the object clicked. Supports
         double underscore attribute name dereferencing.
 
         :param attr:
             Name of the attribute to dereference from the corresponding
-            object, i.e. what will be lined to.  This name supports double
+            object, i.e. what will be linked to.  This name supports double
             underscore object link referencing for ``models.ForeignKey``
             members.
 
@@ -300,10 +303,10 @@ class FancyModelAdmin(ModelAdmin):
 
         :param display:
             What to display as the text for the link being shown.  If not
-            given it defaults to the string representation of the object for
-            the row: ``str(obj)`` .  This parameter supports django
-            templating, the context for which contains a dictionary key named
-            "obj" with the value being the object for the row.
+            given it defaults to the string representation of the linked
+            object.  This parameter supports django templating, the context
+            for which contains a dictionary key named "obj" with the value
+            being the linked object for the row.
 
         Example usage:
 
@@ -326,28 +329,100 @@ class FancyModelAdmin(ModelAdmin):
         display of the link would be the name of the author with the id in
         brakcets, e.g. "Douglas Adams (id=42)"
         """
-        global klass_count
-        klass_count += 1
-        fn_name = 'dyn_fn_%d' % klass_count
-        cls.list_display.append(fn_name)
+        fn_name = cls._new_func_name()
 
         if not title:
             title = attr.capitalize()
-
-        # python scoping is a bit weird with default values, if it isn't
-        # referenced the inner function won't see it, so assign it for use
-        _display = display
 
         def _link(self, obj):
             field_obj = admin_obj_attr(obj, attr)
             if not field_obj:
                 return ''
 
-            text = _obj_display(field_obj, _display)
+            nonlocal display
+            text = _obj_display(field_obj, display)
             return admin_obj_link(field_obj, text)
         _link.short_description = title
-        _link.allow_tags = True
         _link.admin_order_field = attr
+
+        setattr(cls, fn_name, _link)
+
+    @classmethod
+    def add_fk_link(cls, set_name, related_class, title='', display=''):
+        """Adds a ``list_display`` attribute that appears as a link to the
+        Django admin change list, filtered for objects that have a foreign key
+        pointing to this row's object.
+
+        :param set_name:
+            Name of the attribute on the row object that is the foriegn key
+            set. For example "grade_set" on a Student object that is
+            associated with a Grade object through Grade's FK on Student.
+
+        :param related_class:
+            The class that has the foreign key to the row object.  This is
+            used to find the corresponding admin change listing page.
+
+        :param title:
+            Title for the column header. If not given, the related_class is
+            used.
+
+        :param display:
+            What to display as the text for the link being shown.  If not
+            given it defaults to a string showing the number of related items
+            and the title variable.  This parameter supports django
+            templating. The context for the template includes a key named
+            "row", which is the object for the row, a key named "count",
+            which is the number of items in the named set, and a key named
+            "title" which is the title string passed in.
+
+        Example usage:
+
+        .. code-block:: python
+
+            # ---- admin.py file ----
+
+            base = fancy_modeladmin('id')
+            base.add_link('grade_set', Grade, '{{obj.count}} Grades')
+
+            @admin.register(Student)
+            class StudentAdmin(base):
+                pass
+
+        The django admin change list for the Student class would have a column
+        for "id" and another titled "Grades". The "Grades" column
+        would have a link to the Grade change listing, filtered for the each
+        Student row.
+
+        The link would say "# Grades", where # is the number of Grade objects
+        associated with the student. In this case, the template passed in the
+        same as the default and wouldn't be necessary.
+        """
+        fn_name = cls._new_func_name()
+
+        if not title:
+            title = related_class._meta.model_name.capitalize()
+
+        def _link(self, row):
+            set_object = getattr(row, set_name, None)
+
+            # get the url for the change list for this object
+            url = reverse('admin:%s_%s_changelist' % (
+                related_class._meta.app_label, related_class._meta.model_name))
+            url += '?%s__id=%s' % (row._meta.model_name, row.id)
+
+            nonlocal display
+            if not display:
+                display = '{{count}} {{title}}'
+
+            extra_context = {
+                'count':set_object.count(),
+                'title':title,
+                'row':row,
+            }
+
+            text = _obj_display(set_object, display, extra_context)
+            return format_html('<a href="{}">{}</a>', url, text)
+        _link.short_description = title
 
         setattr(cls, fn_name, _link)
 
@@ -358,9 +433,8 @@ class FancyModelAdmin(ModelAdmin):
 
         :param attr:
             Name of the attribute to dereference from the corresponding
-            object, i.e. what will be lined to.  This name supports double
-            underscore object link referencing for ``models.ForeignKey``
-            members.
+            row.  This name supports double underscore object link referencing
+            for ``models.ForeignKey`` members.
 
         :param title:
             Title for the column of the django admin table.  If not given it
@@ -368,31 +442,25 @@ class FancyModelAdmin(ModelAdmin):
 
         :param display:
             What to display as the text for the link being shown.  If not
-            given it defaults to the string representation of the object for
-            the row: ``str(obj)``.  This parameter supports django templating,
-            the context for which contains a dictionary key named "obj" with
-            the value being the object for the row.
+            given it defaults to the string representation of the related
+            object.  This parameter supports django templating, the context
+            for which contains a dictionary key named "obj" with the value
+            being the referenced object that is an attribute of the row
+            object.
         """
-        global klass_count
-        klass_count += 1
-        fn_name = 'dyn_fn_%d' % klass_count
-        cls.list_display.append(fn_name)
+        fn_name = cls._new_func_name()
 
         if not title:
             title = attr.capitalize()
-
-        # python scoping is a bit weird with default values, if it isn't
-        # referenced the inner function won't see it, so assign it for use
-        _display = display
 
         def _ref(self, obj):
             field_obj = admin_obj_attr(obj, attr)
             if not field_obj:
                 return ''
 
-            return _obj_display(field_obj, _display)
+            nonlocal display
+            return _obj_display(field_obj, display)
         _ref.short_description = title
-        _ref.allow_tags = True
         _ref.admin_order_field = attr
 
         setattr(cls, fn_name, _ref)
@@ -406,30 +474,23 @@ class FancyModelAdmin(ModelAdmin):
             Name of the field in the object.
 
         :param format_string:
-            A old-style (to remain python 2.x compatible) % string formatter
-            with a single variable reference. The named ``field`` attribute
-            will be passed to the formatter using the "%" operator. 
+            A C-style % string formatter with a single variable reference. The
+            named ``field`` attribute will be passed to the formatter using
+            the "%" operator. 
 
         :param title:
             Title for the column of the django admin table.  If not given it
             defaults to a capitalized version of ``field``
         """
-        global klass_count
-        klass_count += 1
-        fn_name = 'dyn_fn_%d' % klass_count
-        cls.list_display.append(fn_name)
+        fn_name = cls._new_func_name()
 
         if not title:
             title = field.capitalize()
 
-        # python scoping is a bit weird with default values, if it isn't
-        # referenced the inner function won't see it, so assign it for use
-        _format_string = format_string
-
         def _ref(self, obj):
-            return _format_string % getattr(obj, field)
+            nonlocal format_string
+            return format_string % getattr(obj, field)
         _ref.short_description = title
-        _ref.allow_tags = True
         _ref.admin_order_field = field
 
         setattr(cls, fn_name, _ref)
