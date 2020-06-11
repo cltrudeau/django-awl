@@ -348,7 +348,8 @@ class FancyModelAdmin(ModelAdmin):
         setattr(cls, fn_name, _link)
 
     @classmethod
-    def add_fk_link(cls, set_name, related_class, title='', display=''):
+    def add_fk_link(cls, set_name, related_class, fk_attr, title='', 
+            display=''):
         """Adds a ``list_display`` attribute that appears as a link to the
         Django admin change list, filtered for objects that have a foreign key
         pointing to this row's object.
@@ -361,6 +362,11 @@ class FancyModelAdmin(ModelAdmin):
         :param related_class:
             The class that has the foreign key to the row object.  This is
             used to find the corresponding admin change listing page.
+
+        :param fk_attr:
+            The name of the attribute on the related object that is a foreign
+            key pointing to this row object. Used to create the query string
+            that filters the change listing.
 
         :param title:
             Title for the column header. If not given, the related_class is
@@ -408,7 +414,7 @@ class FancyModelAdmin(ModelAdmin):
             # get the url for the change list for this object
             url = reverse('admin:%s_%s_changelist' % (
                 related_class._meta.app_label, related_class._meta.model_name))
-            url += '?%s__id=%s' % (row._meta.model_name, row.id)
+            url += '?%s__id=%s' % (fk_attr, row.id)
 
             nonlocal display
             if not display:

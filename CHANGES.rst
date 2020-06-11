@@ -1,3 +1,9 @@
+1.2.1
+=====
+
+* fix bug in add_fk_link, filter query string assumed the name of the class
+  would be the same as the name of the attribute, it isn't always
+
 1.2.0
 =====
 
