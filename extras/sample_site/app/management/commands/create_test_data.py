@@ -17,3 +17,11 @@ class Command(BaseCommand):
         show = Show.objects.create(title='Game of Thrones', writer=writer)
         episode = Episode.objects.create(name='Dragonstone', show=show)
         episode = Episode.objects.create(name='Stormborn', show=show)
+
+        Show.objects.create(title='Episodeless', writer=writer)
+
+        show = Show.objects.create(title='Simpsons')
+        episode = Episode.objects.create(name='TreeHouse of Horror III', 
+            show=show)
+
+        Episode.objects.create(name='Without Show')

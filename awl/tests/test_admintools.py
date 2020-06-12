@@ -90,6 +90,7 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         ro_vehiclemake_field = driver_admin.list_display[4]
         ro_vehiclemodel_field = driver_admin.list_display[5]
         rating_field = driver_admin.list_display[6]
+        rating_field_templated = driver_admin.list_display[7]
 
         year_field = vehiclemodel_admin.list_display[2]
         default_set_field = vehiclemodel_admin.list_display[3]
@@ -126,7 +127,7 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         # check that empty values work properly
         fred = Driver.objects.create(name='Fred')
         result = self.field_value(driver_admin, fred, vehiclemodel_field)
-        self.assertEqual('', result)
+        self.assertEqual('<i>no model</i>', result)
         result = self.field_value(driver_admin, fred, vehiclemake_field)
         self.assertEqual('', result)
 
@@ -139,12 +140,22 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         result = self.field_value(driver_admin, bob, rating_field)
         self.assertEqual('0.3', result)
 
+        # check templated field
+        result = self.field_value(driver_admin, bob, rating_field_templated)
+        self.assertEqual('Bob 0.35', result)
+
         # check display with title
         result = self.field_value(vehiclemodel_admin, tercel, year_field)
         self.assertEqual(1999, result)
 
         label = label_for_field(year_field, tercel, vehiclemodel_admin)
         self.assertEqual(label, 'YEAR TITLE')
+
+        # check display with title with empty result
+        yearless = VehicleModel.objects.create(name='Yearless', 
+            vehiclemake=toyota)
+        result = self.field_value(vehiclemodel_admin, yearless, year_field)
+        self.assertEqual('<i>no year</i>', result)
 
         # Validate the add_fk_link method with default values
         html = self.field_value(vehiclemodel_admin, tercel,
@@ -165,3 +176,10 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
 
         label = label_for_field(custom_set_field, tercel, vehiclemodel_admin)
         self.assertEqual('Driver Title', label)
+
+        # Validate add_fk_link, vehicle with no drivers
+        driverless = VehicleModel.objects.create(name='Driverless', 
+            vehiclemake=toyota)
+        html = self.field_value(vehiclemodel_admin, driverless,
+            custom_set_field)
+        self.assertEqual('<i>no drivers</i>', html)

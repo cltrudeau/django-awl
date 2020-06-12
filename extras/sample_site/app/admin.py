@@ -16,7 +16,9 @@ class WriterAdmin(admin.ModelAdmin):
 
 
 base = fancy_modeladmin('title')
-base.add_fk_link('episode_set', Episode)
+base.add_fk_link('episode_set', Episode, 'episode')
+base.add_fk_link('episode_set', Episode, 'episode', title='Episode with Empty', 
+    empty='<i>no episodes</i>')
 
 @admin.register(Show)
 class ShowAdmin(base):
@@ -29,6 +31,13 @@ base.add_link('show__writer', 'This is the Writer Column Title',
 base.add_link('show')
 base.add_object('show__writer', 'Read-Only Writer Column', 
     '{{obj.name}} (id={{obj.id}})')
+base.add_object('show__writer', 'Read-Only Writer with Empty', 
+    '{{obj.name}} (id={{obj.id}})', '<i>no writer</i>')
+base.add_display('name', 'Name Column With Empty', '<i>no name</i>')
+
+base.add_link('show', title='Show with Empty', empty='<i>no show</i>')
+base.add_templated_field('name', 'Name={{field}} Row.id={{row.id}}', 
+    'Templated Column')
 
 @admin.register(Episode)
 class EpisodeAdmin(base):

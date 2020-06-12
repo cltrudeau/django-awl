@@ -52,11 +52,12 @@ base = fancy_modeladmin('id')
 base.add_displays('name')
 base.add_link('vehiclemodel__vehiclemake')
 base.add_link('vehiclemodel', 'My Vehicle Model', 
-    '{{obj.fullname}} id={{obj.id}}')
+    '{{obj.fullname}} id={{obj.id}}', empty='<i>no model</i>')
 base.add_object('vehiclemodel__vehiclemake')
 base.add_object('vehiclemodel', 'RO Vehicle Model', 
     'RO {{obj.fullname}} id={{obj.id}}')
 base.add_formatted_field('rating', '%0.1f')
+base.add_templated_field('rating', '{{row.name}} {{field}}')
 
 @admin.register(Driver)
 class DriverAdmin(base):
@@ -70,10 +71,10 @@ class VehicleMakeAdmin(admin.ModelAdmin):
 
 base = fancy_modeladmin('id')
 base.add_display('name')
-base.add_display('year', 'YEAR TITLE')
+base.add_display('year', 'YEAR TITLE', empty='<i>no year</i>')
 base.add_fk_link('driver_set', Driver, 'vehiclemodel')
 base.add_fk_link('driver_set', Driver, 'vehiclemodel', 'Driver Title',
-    '{{row.name}} {{count}} {{title}}')
+    '{{row.name}} {{count}} {{title}}', empty='<i>no drivers</i>')
 
 @admin.register(VehicleModel)
 class VehicleModelAdmin(base):

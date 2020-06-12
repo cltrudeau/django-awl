@@ -1,3 +1,11 @@
+1.3.0
+=====
+
+* add "empty" arguments to admintools:add_link, add_fk_link, add_display
+  allowing special handling of empty values in a column
+* add admintools:add_template_field, similar to add_formatted_field but uses a
+  Django template instead of a %s string
+
 1.2.1
 =====
 
