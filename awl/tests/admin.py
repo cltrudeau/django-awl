@@ -3,7 +3,8 @@ from django.contrib import admin
 from awl.admintools import make_admin_obj_mixin, fancy_modeladmin
 from awl.tests.models import (Link, Author, Book, Chapter, Driver,
     VehicleMake, VehicleModel)
-from awl.rankedmodel.admintools import admin_link_move_up, admin_link_move_down
+from awl.rankedmodel.admintools import (admin_link_move_up, 
+    admin_link_move_down, admin_move_links)
 
 # ============================================================================
 # Waelsteng Admin Models
@@ -85,14 +86,16 @@ class VehicleModelAdmin(base):
 # ============================================================================
 
 class RankAdmin(admin.ModelAdmin):
-    list_display = ('name', 'move_up', 'move_down')
+    list_display = ('name', 'move_up', 'move_down', 'move_both')
 
     def move_up(self, obj):
         return admin_link_move_up(obj)
-    move_up.allow_tags = True
     move_up.short_description = 'Move Up Rank'
 
     def move_down(self, obj):
         return admin_link_move_down(obj)
-    move_down.allow_tags = True
     move_down.short_description = 'Move Up Rank'
+
+    def move_both(self, obj):
+        return admin_move_links(obj)
+    move_both.short_description = 'Move Both'

@@ -26,8 +26,8 @@ the django admin.  To use the helper functions you will need to have
 .. code-block:: python
 
     urlpatterns = [
-        url(r'^admin/', include(admin.site.urls)),
-        url(r'^rankedmodel/', include('rankedmodel.urls')),
+        url('admin/', include(admin.site.urls)),
+        url('rankedmodel/', include('awl.rankedmodel.urls')),
     ]
 
 
@@ -37,7 +37,7 @@ of your inheriting class.
 
 .. code-block:: python
 
-    from awl.rankedmodel.admin import admin_link_move_up, admin_link_move_down
+    from awl.rankedmodel.admintools import admin_link_move_up, admin_link_move_down
 
     @admin.register(Favourites)
     class FavouritesAdmin(admin.ModelAdmin):
@@ -45,12 +45,10 @@ of your inheriting class.
 
         def move_up(self, obj):
             return admin_link_move_up(obj)
-        move_up.allow_tags = True
         move_up.short_description = 'Move Up Rank'
 
         def move_down(self, obj):
             return admin_link_move_down(obj)
-        move_down.allow_tags = True
         move_down.short_description = 'Move Up Rank'
 
 

@@ -1,3 +1,5 @@
+import re
+
 from django.test import TestCase
 
 from awl.tests.admin import RankAdmin
@@ -116,6 +118,15 @@ class RankModelBase(TestCase, AdminToolsMixin):
         self.assertNotEqual('', self.field_value(rank_admin, b, 'move_down'))
         self.assertEqual('', self.field_value(rank_admin, c, 'move_down'))
 
+        html = self.field_value(rank_admin, a, 'move_both')
+        self.assertEqual( html.count('rankedmodel/move'), 1 )
+
+        html = self.field_value(rank_admin, b, 'move_both')
+        self.assertEqual( html.count('rankedmodel/move'), 2 )
+
+        html = self.field_value(rank_admin, c, 'move_both')
+        self.assertEqual( html.count('rankedmodel/move'), 1 )
+
         # use the view to move b up one
         headers = {
             'HTTP_REFERER':'/admin/',
@@ -129,6 +140,28 @@ class RankModelBase(TestCase, AdminToolsMixin):
         self.visit_admin_link(rank_admin, a, 'move_down', response_code=302,
             headers=headers)
         self.assertValues(a.grouped_filter(), 'b,c,a')
+
+        # Use the up-link from the "move_both" column 
+        #   -> url for c has two links, first match is up, regex group(1) 
+        #   is the link portion of the regex
+        c = refetch(c)
+        html = self.field_value(rank_admin, c, 'move_both')
+        pattern = re.compile('href="([^"]*)')
+        url = list(pattern.finditer(html))[0].group(1)
+
+        self.authed_get(url, response_code=302, headers=headers)
+        self.assertValues(c.grouped_filter(), 'c,b,a')
+        
+        # Use the down-link from the "move_both" column
+        #   -> url for b has two links, second match is down, regex group(1) 
+        #   is the link portion of the regex
+        b = refetch(b)
+        html = self.field_value(rank_admin, b, 'move_both')
+        pattern = re.compile('href="([^"]*)')
+        url = list(pattern.finditer(html))[1].group(1)
+
+        self.authed_get(url, response_code=302, headers=headers)
+        self.assertValues(c.grouped_filter(), 'c,a,b')
 
 
 class AloneTests(RankModelBase):

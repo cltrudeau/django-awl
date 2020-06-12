@@ -1,3 +1,10 @@
+1.4.0
+=====
+
+* Fix html rendering problems with awl.rankedmodel.admintools move links
+* Add new admin_move_links method that compounds the move links into a single
+  column
+
 1.3.0
 =====
 
