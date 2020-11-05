@@ -1,3 +1,9 @@
+1.5.0
+=====
+
+* Add colour mapping features to the css_colour module
+* Fixed some documentation typeos
+
 1.4.0
 =====
 

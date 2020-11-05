@@ -10,11 +10,10 @@ class RankedModel(models.Model):
     :class:`RankedModel.group_filter` for details on implementing grouping.
 
     The ``rank`` field can be set and saved like any other field.  The
-    overridden :class:`RankedModel.save` method maintains rank integrity.
-    The order is maintained
-    but it is not guaranteed that there are not gaps in the rank count -- for
-    simplicity re-ordering is not done on deletion.  If empty slots are a
-    concern, use :class:`RankedModel.repack`.
+    overridden :class:`RankedModel.save` method maintains rank integrity.  The
+    order is maintained but it is not guaranteed that there are not gaps in
+    the rank count -- for simplicity re-ordering is not done on deletion.  If
+    empty slots are a concern, use :class:`RankedModel.repack`.
 
     .. warning::
 
