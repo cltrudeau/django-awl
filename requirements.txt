@@ -1,14 +1,14 @@
 # These requirements are for running tests and the sample_site, the library 
 # itself only needs a subset, see setup.py for that list
 context-temp==0.11.1
-coverage==5.0.4
-Django==3.0.7
-logthing==0.10.1
-pudb==2019.2
-pyflakes==2.1.1
+coverage==5.5
+Django==3.1.7
+logthing==1.0.0
+pudb==2020.1
+pyflakes==2.3.0
 screwdriver==0.14.0
-Sphinx==2.4.4
-sphinx-rtd-theme==0.4.3
-tox==3.14.6
-twine==3.1.1
+Sphinx==3.5.3
+sphinx-rtd-theme==0.5.1
+tox==3.23.0
+twine==3.4.1
 waelstow==0.10.2
