@@ -9,7 +9,9 @@ AWL_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'awl'))
 def boot_django():
     settings.configure(
         BASE_DIR=AWL_DIR,
+        SECRET_KEY = 'django-insecure-$w7!y3g6a5i65_k*+wxhp@)@89!@5)spii+pl=_nbo%rm)%74p',
         DEBUG=True,
+        DEFAULT_AUTO_FIELD='django.db.models.AutoField',
         DATABASES={
             'default':{
                 'ENGINE':'django.db.backends.sqlite3',

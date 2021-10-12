@@ -1,3 +1,8 @@
+FUTURE
+======
+
+* add tests for Django 3.2
+
 1.5.0
 =====
 
