@@ -19,6 +19,7 @@ Contents
    tags
    utils
    waelsteng
+   release_notes
 
 
 Indices and tables

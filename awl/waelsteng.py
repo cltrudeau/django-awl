@@ -12,7 +12,7 @@ from django.contrib import admin
 from django.contrib.admin.utils import lookup_field
 from django.contrib.auth.models import User
 from django.test import override_settings
-from django.test.runner import DiscoverRunner, reorder_suite
+from django.test.runner import DiscoverRunner
 
 from screwdriver import dynamic_load, parse_link
 from waelstow import find_shortcut_tests
@@ -308,8 +308,7 @@ class WRunner(DiscoverRunner):
             shortcut_tests = find_shortcut_tests(suite, test_labels)
             suite = TestSuite(shortcut_tests)
 
-        # parent implementation reorders, so we'll do it too
-        return reorder_suite(suite, self.reorder_by)
+        return suite
 
     def run_suite(self, suite, **kwargs):
         with override_settings(MEDIA_ROOT=self.test_media_root):
