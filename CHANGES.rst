@@ -2,6 +2,11 @@
 Release Notes
 #############
 
+**1.7.0**
+
+* Add `jsonify` tag which turns context objects into JSON for directly
+embedding as Javascript in your rendered templates
+
 **1.6.0**
 
 * Drop support for Python 3.6 (should still work, but no longer testing)

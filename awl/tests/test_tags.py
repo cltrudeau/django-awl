@@ -121,3 +121,17 @@ class TagTests(TestCase):
         context = Context({})
         result = template.render(context)
         self.assertEqual('', result)
+
+    def test_jsonify(self):
+        t = "{% load awltags %}let actors = {% jsonify actors %};"
+
+        actors = {
+            'Pitt':'Brad',
+        }
+        
+        template = Template(t)
+        context = Context({'actors':actors})
+        result = template.render(context)
+
+        expected = """let actors = {"Pitt": "Brad"};"""
+        self.assertEqual(expected, result)

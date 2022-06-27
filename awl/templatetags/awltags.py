@@ -1,6 +1,8 @@
 # awl.templatetags.awltags.py
 
+import json
 from django import template
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -131,8 +133,36 @@ def nop(*args):
     """This tag does nothing. Useful for a comment without having to build a
     full comment block. All parameters are ignored.
 
-    Example::
+    Example:
+
+    .. code-block:: python
 
         {% nop 'this is a string' %}
+
+    The Django template engine now supports single line comments using the 
+    `{#` and `#}` braces. You should use those instead of this tag.
     """
     return ''
+
+# ----------------------------------------------------------------------------
+
+@register.simple_tag
+def jsonify(value):
+    """This tag takes an object in the context and converts it to JSON,
+    inlining the resulting code. 
+
+    Example:
+
+    .. code-block:: python
+
+        <script>
+            let actors = {% jsonify hollywood.actors %};
+        </script>
+
+    Note that this does not return an enclosed string but the actual JSON, its
+    primary use is to turn a dictionary in the context into a usable
+    Javascript object. If you want it in string form, you need to enclose the
+    tag in quotes in your Javascript code.
+    """
+    result = json.dumps(value)
+    return mark_safe(result)
