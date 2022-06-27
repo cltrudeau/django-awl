@@ -164,5 +164,7 @@ def jsonify(value):
     Javascript object. If you want it in string form, you need to enclose the
     tag in quotes in your Javascript code.
     """
-    result = json.dumps(value)
+    from django.core.serializers.json import DjangoJSONEncoder
+
+    result = json.dumps(value, cls=DjangoJSONEncoder)
     return mark_safe(result)

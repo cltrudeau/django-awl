@@ -2,7 +2,7 @@
 Release Notes
 #############
 
-**1.7.0**
+**1.6.2**
 
 * Add `jsonify` tag which turns context objects into JSON for directly
 embedding as Javascript in your rendered templates
