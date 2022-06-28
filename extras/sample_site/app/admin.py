@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from app.models import Writer, Show, Episode
+from app.models import Writer, Show, Episode, Station
 from awl.tests.models import Author, Book, Chapter
-from awl.admintools import make_admin_obj_mixin, fancy_modeladmin
+from awl.admintools import fancy_modeladmin
 
 # remove the awl.test admin files, they confuse things
 admin.site.unregister(Author)
@@ -15,16 +15,24 @@ class WriterAdmin(admin.ModelAdmin):
     list_display = ('name', )
 
 
+@admin.register(Station)
+class StationAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+
+
+# ShowAdmin
 base = fancy_modeladmin('title')
 base.add_fk_link('episode_set', Episode, 'episode')
 base.add_fk_link('episode_set', Episode, 'episode', title='Episode with Empty', 
     empty='<i>no episodes</i>')
+base.add_m2m_link('stations', 'Station')
 
 @admin.register(Show)
 class ShowAdmin(base):
     pass
 
 
+# EpisodeAdmin
 base = fancy_modeladmin('name')
 base.add_link('show__writer', 'This is the Writer Column Title', 
     'writer={{obj.id}}')

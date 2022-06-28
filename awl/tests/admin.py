@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from awl.admintools import make_admin_obj_mixin, fancy_modeladmin
 from awl.tests.models import (Link, Author, Book, Chapter, Driver,
-    VehicleMake, VehicleModel)
+    VehicleMake, VehicleModel, Dealer)
 from awl.rankedmodel.admintools import (admin_link_move_up, 
     admin_link_move_down, admin_move_links)
 
@@ -79,6 +79,17 @@ base.add_fk_link('driver_set', Driver, 'vehiclemodel', 'Driver Title',
 
 @admin.register(VehicleModel)
 class VehicleModelAdmin(base):
+    pass
+
+
+base = fancy_modeladmin('id', 'name')
+base.add_m2m_link('vehicle_models')
+base.add_m2m_link('vehicle_models', 'Models Sold')
+base.add_m2m_link('vehicle_models', 'Models Sold', '{{count}}', 
+    '<i>no models</i>')
+
+@admin.register(Dealer)
+class DealerAdmin(base):
     pass
 
 # ============================================================================

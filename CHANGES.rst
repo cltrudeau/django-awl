@@ -2,6 +2,12 @@
 Release Notes
 #############
 
+**1.7.0**
+
+* Added `add_field` and `add_m2m_link` to `admintools`
+* Deprecated `add_display` from `admintools`, replaced by `add_field`
+* Cleaned up documentation for `admintools` module
+
 **1.6.2**
 
 * Add `jsonify` tag which turns context objects into JSON for directly

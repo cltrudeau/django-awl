@@ -1,4 +1,6 @@
 # awl.admintools.py
+from warnings import warn
+
 from django.contrib.admin import ModelAdmin
 from django.contrib.admin.utils import lookup_field
 from django.template import Context, Template
@@ -7,6 +9,8 @@ from django.utils.html import format_html
 
 from awl.utils import get_obj_attr
 
+# ============================================================================
+# Admin Object Getters
 # ============================================================================
 
 def admin_obj_link(obj, display=''):
@@ -65,9 +69,12 @@ def _obj_display(obj, display='', extra_context={}):
 
     return result
 
+# ============================================================================
+# Old Mixin Maker (Deprecated)
+# ============================================================================
 
 def make_admin_obj_mixin(name):
-    """DEPRECATED!!! Use fancy_modeladmin() instead.
+    """DEPRECATED!!! Use :func:`fancy_modeladmin` instead.
 
     This method dynamically creates a mixin to be used with your 
     :class:`ModelAdmin` classes.  The mixin provides utility methods that can
@@ -193,7 +200,7 @@ def make_admin_obj_mixin(name):
     @classmethod
     def add_obj_link(cls, funcname, attr, title='', display=''):
         if not title:
-            title = attr.capitalize()
+            title = attr.replace('_', ' ').capitalize()
 
         def _link(self, obj):
             field_obj = admin_obj_attr(obj, attr)
@@ -211,7 +218,7 @@ def make_admin_obj_mixin(name):
     @classmethod
     def add_obj_ref(cls, funcname, attr, title='', display=''):
         if not title:
-            title = attr.capitalize()
+            title = attr.replace('_', ' ').capitalize()
 
         def _ref(self, obj):
             field_obj = admin_obj_attr(obj, attr)
@@ -225,6 +232,7 @@ def make_admin_obj_mixin(name):
 
         setattr(cls, funcname, _ref)
 
+    warn('Replaced by FancyModelAdmin class', DeprecationWarning)
     klass = type(name, (), {})
     klass.add_obj_link = add_obj_link
     klass.add_obj_ref = add_obj_ref
@@ -232,6 +240,7 @@ def make_admin_obj_mixin(name):
 
 # ============================================================================
 # Newer Admin Object Mechanism
+# ============================================================================
 
 klass_count = 0
 
@@ -255,14 +264,15 @@ class FancyModelAdmin(ModelAdmin):
     @classmethod
     def add_displays(cls, *args):
         """Each arg is added to the ``list_display`` property without any
-        extra wrappers, using only the regular django functionality"""
+        extra wrappers. Can be used to reference callable methods."""
         for arg in args:
             cls.list_display.append(arg)
 
     @classmethod
     def add_display(cls, attr, title='', empty=''):
-        """Adds a ``list_display`` property without any extra wrappers,
-        similar to :func:`add_displays`, but can also change the title.
+        """*DEPRECATED! Use add_field*
+
+        Adds a column that displays a field in the object.
 
         :param attr:
             Name of the attribute to add to the display
@@ -276,10 +286,31 @@ class FancyModelAdmin(ModelAdmin):
             string. Supports HTML formatting, i.e. could set it to 
             '<i>undefined</i>'.
         """
+        warn('Deprecated, use add_field() instead', DeprecationWarning)
+        cls.add_field(attr, title, empty)
+
+    @classmethod
+    def add_field(cls, attr, title='', empty=''):
+        """Adds a column that shows a field in the object. Note that this
+        cannot be used to add a callable method to ``list_display``.
+
+        :param attr:
+            Attribute of the field to be added
+
+        :param title:
+            Title for the column of the django admin table.  If not given it
+            defaults to a capitalized version of ``attr``
+
+        :param empty:
+            What to display instead if there is no value. Defaults to empty
+            string. Supports HTML formatting, i.e. could set it to 
+            '<i>undefined</i>'.
+        """
+        # add_field()
         fn_name = cls._new_func_name()
 
         if not title:
-            title = attr.capitalize()
+            title = attr.replace('_', ' ').capitalize()
 
         def _ref(self, obj):
             # use the django mechanism for field value lookup
@@ -295,9 +326,14 @@ class FancyModelAdmin(ModelAdmin):
 
     @classmethod
     def add_link(cls, attr, title='', display='', empty=''):
-        """Adds a ``list_display`` attribute that appears as a link to the
-        Django admin change list, filtered to the object clicked. Supports
-        double underscore attribute name dereferencing.
+        """Adds a column that contains a link to another object's Django 
+        Admin page. Used with Foreign Keys and OneToOneFields that are fields
+        on this object (forward links).
+
+        The link goes to the corresponding Django Admin change list page,
+        filtered to the object clicked. 
+
+        Supports double underscore attribute name dereferencing.
 
         :param attr:
             Name of the attribute to dereference from the corresponding
@@ -324,27 +360,35 @@ class FancyModelAdmin(ModelAdmin):
 
         .. code-block:: python
 
+            # ---- models.py file ----
+
+            class Account(models.Model):
+                ...
+
+            class Client(models.Model):
+                account = models.ForeignKey(Account)
+
             # ---- admin.py file ----
 
             base = fancy_modeladmin('id')
-            base.add_link('author', 'Our Authors',
-                '{{obj.name}} (id={{obj.id}})')
+            base.add_link('account', 'Account', '{{obj}}')
 
-            @admin.register(Book)
-            class BookAdmin(base):
+            @admin.register(Client)
+            class ClientAdmin(base):
                 pass
 
-        The django admin change page for the Book class would have a column
-        for "id" and another titled "Our Authors". The "Our Authors" column
-        would have a link for each Author object referenced by "book.author".
-        The link would go to the Author django admin change listing. The
-        display of the link would be the name of the author with the id in
-        brakcets, e.g. "Douglas Adams (id=42)"
+        The above example causes the Book class change list page to have a
+        column for "id" and another titled "Account". The "Account"
+        column will have a link to the change list page for the Account object
+        filtered by Book that was clicked.  The
+        display of the link would be the name display string of the
+        corresponding Account object.
         """
+        # add_link()
         fn_name = cls._new_func_name()
 
         if not title:
-            title = attr.capitalize()
+            title = attr.replace('_', ' ').capitalize()
 
         def _link(self, obj):
             nonlocal display, empty
@@ -361,11 +405,103 @@ class FancyModelAdmin(ModelAdmin):
         setattr(cls, fn_name, _link)
 
     @classmethod
+    def add_m2m_link(cls, attr, title='', display='', empty=''):
+        """Adds a column that contains a link to an object change list
+        filtered to contain all of the objects associated through a
+        many-to-many relationship on this object.
+
+        :param attr:
+            Name of the many-to-many attribute on the object being referenced.
+
+        :param title:
+            Title for the column of the Django Admin table.  If not given it
+            defaults to a capitalized version of ``attr``
+
+        :param display:
+            What to display as the text for the link being shown.  If not
+            given it defaults to a string showing the number of related items
+            and the title variable.  This parameter supports Django
+            templating. The context for the template includes a key named
+            "row", which is the object for the row, a key named "count",
+            which is the number of related items, and a key named
+            "title" which is the title string passed in.
+
+        :param empty:
+            Value to display if there is are no relationships associated with 
+            this object. Defaults to an empty string. Can contain HTML.
+
+        Example usage:
+
+        .. code-block:: python
+
+            # ---- models.py file ----
+
+            class Book(models.Model):
+                publishers = models.ManyToManyField(Publisher)
+
+            # ---- admin.py file ----
+
+            base = fancy_modeladmin('id')
+            base.add_link('publishers', 'Published By', 
+                '{{obj.count}} Publishers')
+
+            @admin.register(Book)
+            class BookAdmin(base):
+                pass
+
+        The above example would produce a Django Admin change list for the
+        Book class would have a column for "id" and another titled
+        "Published By". The "Published By" column would have a link to the 
+        Publisher change listing, filtered for the each Book row.
+
+        The link would say "# Publishers", where # is the number of Publisher 
+        objects related with the book. 
+        """
+        # add_m2m_link()
+        fn_name = cls._new_func_name()
+
+        if not title:
+            title = attr.replace('_', ' ').capitalize()
+
+        def _link(self, row):
+            nonlocal display, empty
+            m2m = getattr(row, attr, None)
+            count = m2m.count()
+            if count == 0:
+                return format_html(empty)
+
+            # get the url for the change list for this object
+            related_class = m2m.model
+            all_ids = [str(x) for x in m2m.values_list('id', flat=True)]
+            all_ids = ','.join(all_ids)
+
+            url = reverse('admin:%s_%s_changelist' % (
+                related_class._meta.app_label, related_class._meta.model_name))
+            url += f'?id__in={all_ids}'
+
+            if not display:
+                display = '{{count}} {{title}}'
+
+            extra_context = {
+                'count':count,
+                'title':title,
+                'row':row,
+            }
+
+            text = _obj_display(m2m, display, extra_context)
+            return format_html('<a href="{}">{}</a>', url, text)
+        _link.short_description = title
+
+        setattr(cls, fn_name, _link)
+
+    @classmethod
     def add_fk_link(cls, set_name, related_class, fk_attr, title='', 
             display='', empty=''):
-        """Adds a ``list_display`` attribute that appears as a link to the
-        Django admin change list, filtered for objects that have a foreign key
-        pointing to this row's object.
+        """Adds a column containing a link to an object that has a Foreign Key
+        that points to this object (backward referencing). 
+
+        The link takes the user to the Django Admin change list, filtered for
+        the object that was clicked to get there.
 
         :param set_name:
             Name of the attribute on the row object that is the foriegn key
@@ -404,21 +540,22 @@ class FancyModelAdmin(ModelAdmin):
             # ---- admin.py file ----
 
             base = fancy_modeladmin('id')
-            base.add_link('grade_set', Grade, '{{obj.count}} Grades')
+            base.add_fk_link('grade_set', Grade, '{{obj.count}} Grades')
 
             @admin.register(Student)
             class StudentAdmin(base):
                 pass
 
-        The django admin change list for the Student class would have a column
-        for "id" and another titled "Grades". The "Grades" column
-        would have a link to the Grade change listing, filtered for the each
-        Student row.
+        The above example would produce a Django Admin change list for the
+        Student class would have a column for "id" and another titled
+        "Grades". The "Grades" column would have a link to the Grade change
+        listing, filtered for the each Student row.
 
         The link would say "# Grades", where # is the number of Grade objects
         associated with the student. In this case, the template passed in the
         same as the default and wouldn't be necessary.
         """
+        # add_fk_link()
         fn_name = cls._new_func_name()
 
         if not title:
@@ -453,8 +590,9 @@ class FancyModelAdmin(ModelAdmin):
 
     @classmethod
     def add_object(cls, attr, title='', display='', empty=''):
-        """Adds a ``list_display`` attribute showing an object.  Supports
-        double underscore attribute name dereferencing.
+        """Adds a column showing the contents of a field as an object. Similar
+        to ``FancyModelAdmin.add_link``, but as plain text. Supports double
+        underscore attribute name dereferencing.
 
         :param attr:
             Name of the attribute to dereference from the corresponding
@@ -480,7 +618,7 @@ class FancyModelAdmin(ModelAdmin):
         fn_name = cls._new_func_name()
 
         if not title:
-            title = attr.capitalize()
+            title = attr.replace('_', ' ').capitalize()
 
         def _ref(self, obj):
             nonlocal empty
@@ -497,8 +635,8 @@ class FancyModelAdmin(ModelAdmin):
 
     @classmethod
     def add_formatted_field(cls, field, format_string, title=''):
-        """Adds a ``list_display`` attribute showing a field in the object
-        using a python %formatted string.
+        """Adds a column showing a field in the object using a python 
+        %formatted string.
 
         :param field:
             Name of the field in the object.
@@ -515,7 +653,7 @@ class FancyModelAdmin(ModelAdmin):
         fn_name = cls._new_func_name()
 
         if not title:
-            title = field.capitalize()
+            title = field.replace('_', ' ').capitalize()
 
         def _ref(self, obj):
             nonlocal format_string
@@ -527,8 +665,8 @@ class FancyModelAdmin(ModelAdmin):
 
     @classmethod
     def add_templated_field(cls, field, template, title=''):
-        """Adds a ``list_display`` attribute showing a field in the object
-        using a Django template. 
+        """Adds a column based on a field that is rendered using a Django
+        template.
 
         :param field:
             Name of the field in the object.
@@ -545,7 +683,7 @@ class FancyModelAdmin(ModelAdmin):
         fn_name = cls._new_func_name()
 
         if not title:
-            title = field.capitalize()
+            title = field.replace('_', ' ').capitalize()
 
         def _ref(self, row):
             nonlocal template
@@ -571,12 +709,8 @@ def fancy_modeladmin(*args):
     for managing the ``list_display`` attribute.
 
     :param ``*args``: [optional] any arguments given will be added to the
-        ``list_display`` property using regular django ``list_display``
+        ``list_display`` property using regular Django ``list_display``
         functionality.
-
-    This function is meant as a replacement for :func:`make_admin_obj_mixin`,
-    it does everything the old one does with fewer bookkeeping needs for the
-    user as well as adding functionality.
 
     Example usage:
 
@@ -600,7 +734,7 @@ def fancy_modeladmin(*args):
             list_display = ('name', )
 
 
-        base = fany_list_display_modeladmin()
+        base = fancy_modeladmin()
         base.add_displays('id', 'name')
         base.add_obj_link('author', 'Our Authors',
             '{{obj.name}} (id={{obj.id}})')

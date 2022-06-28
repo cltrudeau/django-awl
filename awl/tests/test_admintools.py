@@ -7,9 +7,9 @@ from screwdriver import parse_link
 
 from awl.waelsteng import AdminToolsMixin
 from awl.tests.models import (Author, Book, Chapter, Driver, VehicleMake, 
-    VehicleModel)
+    VehicleModel, Dealer)
 from awl.tests.admin import (BookAdmin, ChapterAdmin, DriverAdmin,
-    VehicleModelAdmin)
+    VehicleModelAdmin, DealerAdmin)
 
 # ============================================================================
 
@@ -78,10 +78,14 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
 
         driver_admin = DriverAdmin(Driver, self.site)
         vehiclemodel_admin = VehicleModelAdmin(VehicleModel, self.site)
+        dealer_admin = DealerAdmin(Dealer, self.site)
+
+        dealer = Dealer.objects.create(name="Junkers For Sale")
 
         toyota = VehicleMake.objects.create(name='Toyota')
         tercel = VehicleModel.objects.create(name='Tercel', vehiclemake=toyota,
             year=1999)
+        dealer.vehicle_models.add(tercel)
         bob = Driver.objects.create(name='Bob', vehiclemodel=tercel, 
             rating=0.35)
 
@@ -154,6 +158,7 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         # check display with title with empty result
         yearless = VehicleModel.objects.create(name='Yearless', 
             vehiclemake=toyota)
+        dealer.vehicle_models.add(yearless)
         result = self.field_value(vehiclemodel_admin, yearless, year_field)
         self.assertEqual('<i>no year</i>', result)
 
@@ -183,3 +188,27 @@ class AdminToolsTest(TestCase, AdminToolsMixin):
         html = self.field_value(vehiclemodel_admin, driverless,
             custom_set_field)
         self.assertEqual('<i>no drivers</i>', html)
+
+        #----
+        # M2M Link 
+        default_fields = dealer_admin.list_display[2]
+        custom_fields_title = dealer_admin.list_display[3]
+        custom_fields_all = dealer_admin.list_display[4]
+
+        # Check field with defaults
+        html = self.field_value(dealer_admin, dealer, default_fields)
+        url, text = parse_link(html)
+        self.assertEqual('2 Vehicle models', text)
+        self.assertEqual('/admin/tests/vehiclemodel/?id__in=1,2', url)
+
+        # Check field with custom values, (single VModel)
+        dealer.vehicle_models.remove(tercel)
+        html = self.field_value(dealer_admin, dealer, custom_fields_title)
+        url, text = parse_link(html)
+        self.assertEqual('1 Models Sold', text)
+        self.assertEqual('/admin/tests/vehiclemodel/?id__in=2', url)
+
+        # Check field with custom values, empty
+        dealer.vehicle_models.remove(yearless)
+        html = self.field_value(dealer_admin, dealer, custom_fields_all)
+        self.assertEqual('<i>no models</i>', html)

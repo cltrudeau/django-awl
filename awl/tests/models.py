@@ -78,6 +78,10 @@ class Driver(models.Model):
     rating = models.FloatField(null=True)
 
 
+class Dealer(models.Model):
+    name = models.CharField(max_length=20)
+    vehicle_models = models.ManyToManyField(VehicleModel)
+
 # ============================================================================
 # RankedModel Models 
 

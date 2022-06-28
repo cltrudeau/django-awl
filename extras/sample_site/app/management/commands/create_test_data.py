@@ -2,19 +2,24 @@
 
 from django.core.management.base import BaseCommand
 
-from app.models import Writer, Show, Episode
+from app.models import Writer, Station, Show, Episode
 
 # =============================================================================
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        nbc = Station.objects.create(name='NBC')
+        hbo = Station.objects.create(name='HBO')
+
         writer = Writer.objects.create(name='Douglas Adams')
         show = Show.objects.create(title='Dirk Gently', writer=writer)
+        show.stations.add(nbc, hbo)
         episode = Episode.objects.create(name='Space Rabbit', show=show)
         episode = Episode.objects.create(name='Fans of Wet Circles', show=show)
 
         writer = Writer.objects.create(name='G.R.R Martin')
         show = Show.objects.create(title='Game of Thrones', writer=writer)
+        show.stations.add(hbo)
         episode = Episode.objects.create(name='Dragonstone', show=show)
         episode = Episode.objects.create(name='Stormborn', show=show)
 
