@@ -74,7 +74,7 @@ def _obj_display(obj, display='', extra_context={}):
 # ============================================================================
 
 def make_admin_obj_mixin(name):
-    """DEPRECATED!!! Use :func:`fancy_modeladmin` instead.
+    """**DEPRECATED** Use :func:`fancy_modeladmin` instead.
 
     This method dynamically creates a mixin to be used with your 
     :class:`ModelAdmin` classes.  The mixin provides utility methods that can
@@ -270,7 +270,7 @@ class FancyModelAdmin(ModelAdmin):
 
     @classmethod
     def add_display(cls, attr, title='', empty=''):
-        """*DEPRECATED! Use add_field*
+        """**DEPRECATED!** Use :func:`FancyModelAdmin.add_field`
 
         Adds a column that displays a field in the object.
 
@@ -291,8 +291,10 @@ class FancyModelAdmin(ModelAdmin):
 
     @classmethod
     def add_field(cls, attr, title='', empty=''):
-        """Adds a column that shows a field in the object. Note that this
-        cannot be used to add a callable method to ``list_display``.
+        """Adds a column that shows a field in the object. 
+
+        Note that this cannot be used to add a callable, it only works with
+        attributes on the object.
 
         :param attr:
             Attribute of the field to be added
@@ -409,6 +411,10 @@ class FancyModelAdmin(ModelAdmin):
         """Adds a column that contains a link to an object change list
         filtered to contain all of the objects associated through a
         many-to-many relationship on this object.
+
+        Note that the filtering on the related object is done through an "in"
+        query of all the ids of the related many-to-many object. This feature
+        should not be used for large relationships.
 
         :param attr:
             Name of the many-to-many attribute on the object being referenced.
@@ -546,14 +552,14 @@ class FancyModelAdmin(ModelAdmin):
             class StudentAdmin(base):
                 pass
 
-        The above example would produce a Django Admin change list for the
-        Student class would have a column for "id" and another titled
-        "Grades". The "Grades" column would have a link to the Grade change
-        listing, filtered for the each Student row.
+        The above example produces a Django Admin change list for the Student
+        class that has a "id" and "Grades" columns.  The "Grades" column
+        contains a link to the Grade class's change listing, filtered for the
+        Student row.
 
-        The link would say "# Grades", where # is the number of Grade objects
-        associated with the student. In this case, the template passed in the
-        same as the default and wouldn't be necessary.
+        The link is displayed as "# Grades", where # is the number of Grade 
+        objects associated with the Student row. In this case, the template
+        passed in the same as the default and wouldn't be necessary.
         """
         # add_fk_link()
         fn_name = cls._new_func_name()
@@ -591,8 +597,8 @@ class FancyModelAdmin(ModelAdmin):
     @classmethod
     def add_object(cls, attr, title='', display='', empty=''):
         """Adds a column showing the contents of a field as an object. Similar
-        to ``FancyModelAdmin.add_link``, but as plain text. Supports double
-        underscore attribute name dereferencing.
+        to :func:`FancyModelAdmin.add_link`, but as plain text. Supports
+        double underscore attribute name dereferencing.
 
         :param attr:
             Name of the attribute to dereference from the corresponding
