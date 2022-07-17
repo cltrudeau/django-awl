@@ -17,11 +17,11 @@ class RankedModel(models.Model):
 
     .. warning::
 
-        Due to the use of the overridden ``save()`` for integrity caution must
-        be employed when dealing with any ``update()`` calls or raw SQL as
-        these will not call the ``save()`` method.
+        Due to the use of the overridden ``save()`` caution must be employed
+        when dealing with any ``update()`` calls or raw SQL as these will not
+        call the ``save()`` method.
 
-    Two admin helper functions are provided so you can do rank re-ording in
+    Two admin helper functions are provided so you can do rank re-ordering in
     the django admin.  To use the functions, add columns to your admin
     instances of the inheriting class::
 
