@@ -2,7 +2,7 @@
 # itself only needs a subset, see setup.py for that list
 context-temp==0.11.1
 coverage==6.2
-Django==4.0.4
+Django==4.0.7
 logthing==1.0.0
 pudb==2021.2.2
 pyflakes==2.4.0
