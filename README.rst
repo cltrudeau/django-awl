@@ -18,9 +18,10 @@ Supports
 
 django-awl has been tested with:
 
-* Django 3.1 using Python 3.7, 3.8, 3.9, 3.10
 * Django 3.2 using Python 3.7, 3.8, 3.9, 3.10
 * Django 4.0 using Python 3.8, 3.9, 3.10
+* Django 4.1 using Python 3.8, 3.9, 3.10, 3.11
+
 
 Docs & Source
 =============
