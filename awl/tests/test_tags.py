@@ -3,6 +3,8 @@
 from django.template import Context, Template, TemplateSyntaxError
 from django.test import TestCase
 
+from waelstow import noted_raise
+
 # ============================================================================
 
 class TagTests(TestCase):
@@ -135,3 +137,39 @@ class TagTests(TestCase):
 
         expected = """let actors = {"Pitt": "Brad"};"""
         self.assertEqual(expected, result)
+
+    def test_qif(self):
+        data = {
+            "good":True,
+            "bad":False,
+            "car":"Honda",
+            "nothing":[],
+            "value":3,
+            "fruit":["apples", "oranges"],
+        }
+
+        tests = [
+            ("{% load awltags %}{% qif good 'yes' %}", "yes"),
+            ("{% load awltags %}{% qif bad 'no' %}", ""),
+            ("{% load awltags %}{% qif foo 'no' %}", ""),
+            ("{% load awltags %}{% qif good.0 'no' %}", ""),
+            ("{% load awltags %}{% qif good car %}", "Honda"),
+            ("{% load awltags %}{% qif nothing 'no' %}", ""),
+            ("{% load awltags %}{% qif fruit 'yes' %}", "yes"),
+            ("{% load awltags %}{% qif value > 2 'yes' %}", "yes"),
+
+            ("{% load awltags %}{% qifelse good 'yes' 'no'%}", "yes"),
+            ("{% load awltags %}{% qifelse bad 'yes' 'no'%}", "no"),
+            ("{% load awltags %}{% qifelse nothing 'yes' 'no'%}", "no"),
+            ("{% load awltags %}{% qifelse fruit 'yes' 'no'%}", "yes"),
+            ("{% load awltags %}{% qifelse value > 2 'yes' 'no'%}", "yes"),
+            ("{% load awltags %}{% qifelse value > 4 'yes' 'no'%}", "no"),
+        ]
+
+        c = Context(data)
+        with noted_raise("Test tag:{tag}"):
+            for tag, expected in tests:
+                t = Template(tag)
+                result = t.render(c)
+
+                self.assertEqual(expected, result)

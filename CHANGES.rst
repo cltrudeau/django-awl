@@ -2,6 +2,11 @@
 Release Notes
 #############
 
+**1.8.0**
+
+* Added `{% qif %}` tag
+* Drop support for Django 3.1, add support for Django 4.1 and Python 3.11
+
 **1.7.0**
 
 * Added `add_field` and `add_m2m_link` to `admintools`
@@ -11,7 +16,7 @@ Release Notes
 **1.6.2**
 
 * Add `jsonify` tag which turns context objects into JSON for directly
-embedding as Javascript in your rendered templates
+  embedding as Javascript in your rendered templates
 
 **1.6.0**
 

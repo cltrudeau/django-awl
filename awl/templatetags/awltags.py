@@ -2,6 +2,8 @@
 
 import json
 from django import template
+from django.template.defaulttags import TemplateIfParser
+from django.template.base import Node
 from django.utils.safestring import mark_safe
 
 register = template.Library()
@@ -168,3 +170,67 @@ def jsonify(value):
 
     result = json.dumps(value, cls=DjangoJSONEncoder)
     return mark_safe(result)
+
+# ----------------------------------------------------------------------------
+# Q-If, Q-If-Else
+# ----------------------------------------------------------------------------
+
+class QIfElseNode(Node):
+    def __init__(self, condition, if_true, if_false):
+        self.condition = condition
+        self.if_true = if_true
+        self.if_false = if_false
+
+    def render(self, context):
+        if self.condition.eval(context):
+            return self.if_true.resolve(context)
+
+        if self.if_false:
+            return self.if_false.resolve(context)
+
+        return ""
+
+
+@register.tag("qif")
+def qif(parser, token):
+    """
+    A simplified single tag that does if matching. Takes a condition and a
+    result if the condition is true. Uses Django's parser for the regular
+    {% if %} tag so any conditions supported by it should work here.
+
+    .. code-block:: python
+
+        {% qif value >= 2 'plural' %}
+
+    In the above example, if value is greater than or equal to 2, then the tag
+    renders as "plural", otherwise returns empty.
+    """
+    parts = token.split_contents()[1:]
+    condition = TemplateIfParser(parser, parts[0:-1]).parse()
+    if_true = parser.compile_filter(parts[-1])
+
+    return QIfElseNode(condition, if_true, "")
+
+
+@register.tag("qifelse")
+def qifelse(parser, token):
+    """
+    A simplified single tag that does if-else matching. Takes a condition, a
+    result if the condition is true, and a result if the condition is false.
+    Uses Django's parser for the regular {% if %} tag so any conditions
+    supported by it should work here.
+
+    .. code-block:: python
+
+        {% qifelse value >= 2 'plural' 'singular' %}
+
+    In the above example, if value is greater than or equal to 2, then the tag
+    renders as "plural", otherwise returns "singular".
+    """
+    parts = token.split_contents()[1:]
+    if_true = parser.compile_filter(parts[-2])
+    if_false = parser.compile_filter(parts[-1])
+
+    condition = TemplateIfParser(parser, parts[0:-2]).parse()
+
+    return QIfElseNode(condition, if_true, if_false)

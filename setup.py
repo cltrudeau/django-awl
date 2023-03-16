@@ -22,24 +22,24 @@ SETUP_ARGS = dict(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     keywords='django,state machine',
     test_suite="load_tests.get_suite",
     install_requires=[
-        'Django>=3.1',
-        'logthing>=0.10.1',
-        'screwdriver>=0.11.0',
-        'waelstow>=0.10.2',
+        'Django>=3.2',
+        'logthing>=1.0.0',
+        'screwdriver>=0.14.0',
+        'waelstow>=0.11.0',
     ],
     tests_require=[
-        'context-temp>=0.11.0',
+        'context-temp>=0.11.1',
     ]
 )
 

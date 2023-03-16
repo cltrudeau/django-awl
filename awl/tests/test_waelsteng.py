@@ -103,10 +103,6 @@ class WRunnerTest(TestCase):
         cls.tempdir = tempfile.mkdtemp()
         cls.media_dir = os.path.abspath(os.path.join(cls.tempdir, 'media'))
 
-    def assert_test_strings(self, expected, tests):
-        names = [str(test) for test in tests]
-        self.assertEqual(set(expected), set(names))
-
     @override_settings(WRUNNER=wrunner_settings)
     def test_runner(self):
         # this is going to get ugly... we're using the runner right now, so to
@@ -155,19 +151,27 @@ class WRunnerTest(TestCase):
         # -- test method and class shortcut labels as well as full test names
         # works
         expected = [
-            'test_same_order (awl.tests.test_ranked.GroupedTests)',
-            'test_same_order (awl.tests.test_ranked.AloneTests)',
-            'test_too_large (awl.tests.test_ranked.GroupedTests)',
-            'test_create_admin (awl.tests.test_commands.CommandTests)',
-            'test_create_cmd (awl.tests.test_commands.CommandTests)',
-            'test_run_script (awl.tests.test_commands.CommandTests)',
-            'test_wipe_migrations (awl.tests.test_commands.CommandTests)',
-            'test_print_setting (awl.tests.test_commands.CommandTests)',
+            'test_same_order',
+            'test_same_order',
+            'test_too_large',
+            'test_create_admin',
+            'test_create_cmd',
+            'test_run_script',
+            'test_wipe_migrations',
+            'test_print_setting',
         ]
         suite = real_runner.build_suite([
             'awl.tests.test_ranked.GroupedTests.test_too_large',
             '=_same_order', '=Command'])
-        self.assert_test_strings(expected, suite)
+
+        # suite names are different depending on Python version, not going to
+        # look for the whole thing, just for the function name
+        suite_names = [str(test) for test in suite]
+        all_names = " ".join(suite_names)
+        for name in expected:
+            self.assertIn(name, all_names)
+
+        self.assertEqual(len(expected), len(suite_names))
 
         # test no labels at all
         suite = real_runner.build_suite([])
