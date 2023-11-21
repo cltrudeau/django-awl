@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=`grep "__version__ = " awl/__init__.py | cut -d "'" -f 2`
+version=`grep "__version__ = " src/awl/__init__.py | cut -d "'" -f 2`
 
 git tag "$version"
 
