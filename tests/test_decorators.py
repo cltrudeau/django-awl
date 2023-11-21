@@ -1,4 +1,4 @@
-# awl.tests.test_decorators.py
+# tests.test_decorators.py
 import json
 
 from django.test import TestCase

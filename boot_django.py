@@ -1,12 +1,16 @@
 # File sets up the django environment, used by other scripts that need to
 # execute in django land
-import os
+import sys
+from pathlib import Path
 import django
 from django.conf import settings
 
-AWL_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'awl'))
-
 def boot_django():
+    AWL_DIR = Path("awl").resolve()
+    TEST_DIR = Path("tests").resolve()
+
+    sys.path.insert(0, str(TEST_DIR))
+
     settings.configure(
         BASE_DIR=AWL_DIR,
         SECRET_KEY = 'django-insecure-$w7!y3g6a5i65_k*+wxhp@)@89!@5)spii+pl=_nbo%rm)%74p',
@@ -15,10 +19,10 @@ def boot_django():
         DATABASES={
             'default':{
                 'ENGINE':'django.db.backends.sqlite3',
-                'NAME': os.path.join(AWL_DIR, 'db.sqlite3'),
+                'NAME': str(AWL_DIR / 'db.sqlite3'),
             }
         },
-        ROOT_URLCONF='awl.tests.urls',
+        ROOT_URLCONF='tests.urls',
         MIDDLEWARE = (
             'django.middleware.security.SecurityMiddleware',
             'django.contrib.sessions.middleware.SessionMiddleware',
@@ -34,14 +38,13 @@ def boot_django():
             'django.contrib.sessions',
             'django.contrib.messages',
             'django.contrib.admin',
-            
             'awl',
-            'awl.tests',
+            'tests',
         ),
         TEMPLATES = [{
             'BACKEND':'django.template.backends.django.DjangoTemplates',
             'DIRS':[
-                os.path.abspath(os.path.join(AWL_DIR, 'tests/data/templates')),
+                str(TEST_DIR / 'data/templates'),
             ],
             'APP_DIRS':True,
             'OPTIONS': {

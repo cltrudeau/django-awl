@@ -30,4 +30,7 @@ class Episode(models.Model):
         blank=True)
 
     def __str__(self):
+        if self.show is None:
+            return 'Episode(id=%s --%s)' % (self.id, self.name)
+
         return 'Episode(id=%s %s:%s)' % (self.id, self.show.title, self.name)

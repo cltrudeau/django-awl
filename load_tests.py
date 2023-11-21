@@ -11,7 +11,7 @@ boot_django()
 #from django.core.management import call_command
 #call_command('shell')
 
-default_labels = ['awl.tests', ]
+default_labels = ['tests', ]
 
 def get_suite(labels=default_labels):
     from awl.waelsteng import WRunner

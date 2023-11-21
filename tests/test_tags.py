@@ -1,4 +1,4 @@
-# awl.tests.test_tags.py
+# tests.test_tags.py
 
 from django.template import Context, Template, TemplateSyntaxError
 from django.test import TestCase
@@ -11,7 +11,7 @@ class TagTests(TestCase):
     def test_getitem(self):
         t = """
         {% load awltags %}
-        
+
         {{d|getitem:key}}"""
 
         template = Template(t)

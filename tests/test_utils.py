@@ -1,10 +1,10 @@
-# awl.tests.test_utils.py
+# tests.test_utils.py
 import sys
 from io import StringIO
 
 from django.test import TestCase
 
-from awl.tests.models import Link
+from tests.models import Link
 from awl.utils import (URLTree, refetch, refetch_for_update, render_page,
     render_page_to_string, get_field_names, get_obj_attr)
 from awl.waelsteng import FakeRequest
@@ -49,7 +49,7 @@ class UtilsTest(TestCase):
         self.assertEqual(expected, response.content.decode('ascii'))
 
     def test_get_field_names(self):
-        from awl.tests.models import Person
+        from tests.models import Person
 
         # test defaults, ignore order
         expected = ['name', 'phone']

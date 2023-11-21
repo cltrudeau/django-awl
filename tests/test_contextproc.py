@@ -1,4 +1,4 @@
-# awl.tests.test_contextproc.py
+# tests.test_contextproc.py
 
 from django.test import TestCase
 

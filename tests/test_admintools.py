@@ -1,4 +1,4 @@
-# awl.tests.test_admintools.py
+# tests.test_admintools.py
 from django.contrib.admin.utils import label_for_field
 from django.test import TestCase
 from django.utils.safestring import SafeData
@@ -6,9 +6,9 @@ from django.utils.safestring import SafeData
 from screwdriver import parse_link
 
 from awl.waelsteng import AdminToolsMixin
-from awl.tests.models import (Author, Book, Chapter, Driver, VehicleMake, 
+from tests.models import (Author, Book, Chapter, Driver, VehicleMake,
     VehicleModel, Dealer)
-from awl.tests.admin import (BookAdmin, ChapterAdmin, DriverAdmin,
+from tests.admin import (BookAdmin, ChapterAdmin, DriverAdmin,
     VehicleModelAdmin, DealerAdmin)
 
 # ============================================================================

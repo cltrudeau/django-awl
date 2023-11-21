@@ -1,8 +1,8 @@
-# awl.tests.test_models.py
+# tests.test_models.py
 from django.test import TestCase
 
 from awl.utils import refetch
-from awl.tests.models import Validator
+from tests.models import Validator
 
 # ============================================================================
 

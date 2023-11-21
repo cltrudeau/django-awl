@@ -1,4 +1,4 @@
-# awl.tests.test_colours.py
+# tests.test_colours.py
 
 from django.test import TestCase
 

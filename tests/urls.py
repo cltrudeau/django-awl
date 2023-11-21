@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from awl.rankedmodel import urls as ranked_urls
-from awl.tests import views
+from tests import views
 
 from django.urls import include, path
 

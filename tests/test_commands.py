@@ -1,4 +1,4 @@
-# awl.tests.test_commands.py
+# tests.test_commands.py
 import os
 from unittest import mock
 

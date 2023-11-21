@@ -7,6 +7,7 @@
 import shutil, tempfile
 from unittest import TestSuite
 
+from django import VERSION
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.utils import lookup_field
@@ -261,6 +262,9 @@ class AdminToolsMixin(object):
 # Alternate Runner
 # ============================================================================
 
+# DiscoverRunner changed its signature in Django 5, need to dynamically match
+# it below
+
 class WRunner(DiscoverRunner):
     #
     # documentation for this is directly in docs/waelsteng.rst
@@ -300,9 +304,10 @@ class WRunner(DiscoverRunner):
         if self.create_temp_media_root:
             shutil.rmtree(self.test_media_root)
 
-    def build_suite(self, test_labels, extra_tests=None, **kwargs):
+    def build_suite(self, test_labels, *args, **kwargs):
         # find default full suite
-        suite = super(WRunner, self).build_suite([], extra_tests, **kwargs)
+        suite = super(WRunner, self).build_suite([], *args, **kwargs)
+
         if test_labels:
             # just do the test cases for the given labels
             shortcut_tests = find_shortcut_tests(suite, test_labels)

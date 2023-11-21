@@ -1,9 +1,9 @@
 from django.contrib import admin
 
 from awl.admintools import make_admin_obj_mixin, fancy_modeladmin
-from awl.tests.models import (Link, Author, Book, Chapter, Driver,
+from tests.models import (Link, Author, Book, Chapter, Driver,
     VehicleMake, VehicleModel, Dealer)
-from awl.rankedmodel.admintools import (admin_link_move_up, 
+from awl.rankedmodel.admintools import (admin_link_move_up,
     admin_link_move_down, admin_move_links)
 
 # ============================================================================
@@ -36,10 +36,10 @@ class BookAdmin(admin.ModelAdmin, base):
 
 base = make_admin_obj_mixin('ChapterMixin')
 base.add_obj_link('show_author', 'book__author')
-base.add_obj_link('show_book', 'book', 'My Book', 
+base.add_obj_link('show_book', 'book', 'My Book',
     '{{obj.classname}}.id={{obj.id}}')
 base.add_obj_ref('readonly_author', 'book__author')
-base.add_obj_ref('readonly_book', 'book', 'Readonly Book', 
+base.add_obj_ref('readonly_book', 'book', 'Readonly Book',
     'RO {{obj.classname}}.id={{obj.id}}')
 
 @admin.register(Chapter)
@@ -52,10 +52,10 @@ class ChapterAdmin(admin.ModelAdmin, base):
 base = fancy_modeladmin('id')
 base.add_displays('name')
 base.add_link('vehiclemodel__vehiclemake')
-base.add_link('vehiclemodel', 'My Vehicle Model', 
+base.add_link('vehiclemodel', 'My Vehicle Model',
     '{{obj.fullname}} id={{obj.id}}', empty='<i>no model</i>')
 base.add_object('vehiclemodel__vehiclemake')
-base.add_object('vehiclemodel', 'RO Vehicle Model', 
+base.add_object('vehiclemodel', 'RO Vehicle Model',
     'RO {{obj.fullname}} id={{obj.id}}')
 base.add_formatted_field('rating', '%0.1f')
 base.add_templated_field('rating', '{{row.name}} {{field}}')
@@ -85,7 +85,7 @@ class VehicleModelAdmin(base):
 base = fancy_modeladmin('id', 'name')
 base.add_m2m_link('vehicle_models')
 base.add_m2m_link('vehicle_models', 'Models Sold')
-base.add_m2m_link('vehicle_models', 'Models Sold', '{{count}}', 
+base.add_m2m_link('vehicle_models', 'Models Sold', '{{count}}',
     '<i>no models</i>')
 
 @admin.register(Dealer)

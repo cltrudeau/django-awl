@@ -5,8 +5,8 @@ from django.test import TestCase, override_settings
 
 from awl.waelsteng import AdminToolsMixin, messages_from_response
 
-from awl.tests.admin import LinkAdmin
-from awl.tests.models import Link
+from tests.admin import LinkAdmin
+from tests.models import Link
 from awl.waelsteng import WRunner
 
 # ============================================================================
@@ -94,7 +94,7 @@ def fake_loader():
 
 wrunner_settings = {
     'CREATE_TEMP_MEDIA_ROOT':True,
-    'TEST_DATA':'awl.tests.test_waelsteng.fake_loader',
+    'TEST_DATA':'tests.test_waelsteng.fake_loader',
 }
 
 class WRunnerTest(TestCase):
@@ -161,7 +161,7 @@ class WRunnerTest(TestCase):
             'test_print_setting',
         ]
         suite = real_runner.build_suite([
-            'awl.tests.test_ranked.GroupedTests.test_too_large',
+            'tests.test_ranked.GroupedTests.test_too_large',
             '=_same_order', '=Command'])
 
         # suite names are different depending on Python version, not going to

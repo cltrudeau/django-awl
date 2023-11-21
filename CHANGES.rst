@@ -2,6 +2,17 @@
 Release Notes
 #############
 
+**1.8.2**
+
+* 2023/11/20
+* Moved testing framework to nox
+* Added test target for Django 5.0
+* Fixed syntax warnings in regexes in CSS colours
+* Small changes to WRunner to be compatible with the signature change in 5.0
+* Moved test module up out of awl and into the repo root
+* Updated all package dependency numbers for local requirements
+* Re-built the sample site to be Django 5.0 based
+
 **1.8.1**
 
 * 2023/06/29

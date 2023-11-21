@@ -1,4 +1,4 @@
-# awl.tests.test_models.py
+# tests.test_models.py
 from django.test import TestCase
 
 from awl.models import Counter, Lock, Choices, QuerySetChain

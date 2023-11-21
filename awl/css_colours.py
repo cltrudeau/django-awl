@@ -156,7 +156,7 @@ LOWER_WEB_COLOUR_MAP = {k.lower():v for k, v in WEB_COLOUR_MAP.items()}
 
 
 HEX_MATCH = re.compile(
-    """               # #fff or #FBF01B
+    r"""                  # #fff or #FBF01B
     \#                   # starts with #
     ([a-fA-F0-9]{3})     # excatly 3 hex digits
     $                    # and nothing more
@@ -168,7 +168,7 @@ HEX_MATCH = re.compile(
 
 
 RGB_MATCH = re.compile(
-    """                # rgb(0, 12, 123)
+    r"""                # rgb(0, 12, 123)
     ^[rR][gG][bB]      # starts with "rgb"
     \s*\(\s*           # spaces ( spaces
     \d{1,3}            # 1-3 digits
@@ -181,7 +181,7 @@ RGB_MATCH = re.compile(
 
 
 RGBA_MATCH = re.compile(
-    """                # rgba(0, 12, 123, 0.3)
+    r"""                # rgba(0, 12, 123, 0.3)
     ^[rR][gG][bB][aA]  # starts with "rgb"
     \s*\(\s*           # spaces ( spaces
     \d{1,3}            # 1-3 digits
@@ -197,7 +197,7 @@ RGBA_MATCH = re.compile(
 
 
 HSL_MATCH = re.compile(
-    """                # hsl(120, 5%, 100%)
+    r"""                # hsl(120, 5%, 100%)
     ^[hH][sS][lL]      # starts with "hsl"
     \s*\(\s*           # spaces ( spaces
     \d{1,3}            # 1-3 digits for Hue
@@ -210,7 +210,7 @@ HSL_MATCH = re.compile(
 
 
 HSLA_MATCH = re.compile(
-    """                # hsla(120, 5%, 100%, 0.3)
+    r"""                # hsla(120, 5%, 100%, 0.3)
     ^[hH][sS][lL][aA]  # starts with "hsla"
     \s*\(\s*           # spaces ( spaces
     \d{1,3}            # 1-3 digits for Hue

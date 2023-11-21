@@ -20,7 +20,7 @@ class Validator(ValidatingMixin, models.Model):
         self.counter += 1
 
 # ============================================================================
-# Admintools Models 
+# Admintools Models
 # ============================================================================
 
 class Author(models.Model):
@@ -83,7 +83,7 @@ class Dealer(models.Model):
     vehicle_models = models.ManyToManyField(VehicleModel)
 
 # ============================================================================
-# RankedModel Models 
+# RankedModel Models
 
 class Alone(RankedModel):
     name = models.CharField(max_length=1)
