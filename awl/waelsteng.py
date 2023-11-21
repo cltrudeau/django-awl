@@ -7,7 +7,6 @@
 import shutil, tempfile
 from unittest import TestSuite
 
-from django import VERSION
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.utils import lookup_field

@@ -6,6 +6,7 @@ Release Notes
 
 * 2023/11/20
 * Moved testing framework to nox
+* Moved build config to pyproject and "build" command
 * Added test target for Django 5.0
 * Fixed syntax warnings in regexes in CSS colours
 * Small changes to WRunner to be compatible with the signature change in 5.0
