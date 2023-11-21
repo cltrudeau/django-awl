@@ -11,21 +11,21 @@
 # serve to show the default.
 
 import sys
-import os
 import shlex
+from pathlib import Path
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
-CUR_DIR = os.path.join(os.path.dirname(__file__))
-AWL_DIR = os.path.abspath(os.path.join(CUR_DIR, 'awl'))
-sys.path.insert(0, os.path.abspath('..'))
+SRC_DIR = Path(__file__).parent / '../src'
+SRC_DIR = SRC_DIR.resolve()
+sys.path.insert(0, str(SRC_DIR))
 import django
 from django.conf import settings
 settings.configure(
-    BASE_DIR=AWL_DIR,
+    BASE_DIR=str(SRC_DIR / 'awl'),
     INSTALLED_APPS=(
         'django.contrib.auth',
         'django.contrib.contenttypes',
@@ -73,10 +73,8 @@ copyright = '2015-%s, %s' % (datetime.now().year, author)
 # built documents.
 #
 # The short X.Y version.
-import imp
-mod = imp.load_source('awl', '../awl/__init__.py')
-
-version = mod.__version__
+import awl
+version = awl.__version__
 
 # The full version, including alpha/beta/rc tags.
 release = version
