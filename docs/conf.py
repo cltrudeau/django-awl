@@ -14,18 +14,18 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+import django
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
-import django
-import awl
-
 SRC_DIR = Path(__file__).parent / '../src'
 SRC_DIR = SRC_DIR.resolve()
 sys.path.insert(0, str(SRC_DIR))
 from django.conf import settings  # noqa: E402
+import awl  # noqa: E402
 settings.configure(
     BASE_DIR=str(SRC_DIR / 'awl'),
     INSTALLED_APPS=(
