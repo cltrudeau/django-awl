@@ -121,7 +121,7 @@ class AccessorNode(template.Node):
                 return ''
 
             return ref
-        except:  # noqa: E722
+        except Exception:
             # any lookup errors should result in empty
             if self.as_var:
                 context[self.as_var] = ''
