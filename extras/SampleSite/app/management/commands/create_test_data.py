@@ -14,19 +14,19 @@ class Command(BaseCommand):
         writer = Writer.objects.create(name='Douglas Adams')
         show = Show.objects.create(title='Dirk Gently', writer=writer)
         show.stations.add(nbc, hbo)
-        episode = Episode.objects.create(name='Space Rabbit', show=show)
-        episode = Episode.objects.create(name='Fans of Wet Circles', show=show)
+        _episode = Episode.objects.create(name='Space Rabbit', show=show)
+        _episode = Episode.objects.create(name='Fans of Wet Circles', show=show)
 
         writer = Writer.objects.create(name='G.R.R Martin')
         show = Show.objects.create(title='Game of Thrones', writer=writer)
         show.stations.add(hbo)
-        episode = Episode.objects.create(name='Dragonstone', show=show)
-        episode = Episode.objects.create(name='Stormborn', show=show)
+        _episode = Episode.objects.create(name='Dragonstone', show=show)
+        _episode = Episode.objects.create(name='Stormborn', show=show)
 
         Show.objects.create(title='Episodeless', writer=writer)
 
         show = Show.objects.create(title='Simpsons')
-        episode = Episode.objects.create(name='TreeHouse of Horror III', 
+        _episode = Episode.objects.create(name='TreeHouse of Horror III', 
             show=show)
 
         Episode.objects.create(name='Without Show')

@@ -34,12 +34,12 @@ class ModelsTest(TestCase):
         self.assertEqual(MoreColours.GREEN, 'g')
 
         # check conversion to django-style choices list
-        l = list(MoreColours)
-        self.assertEqual(len(l), 4)
-        self.assertIn(('r', 'Red'), l)
-        self.assertIn(('b', 'Blueish'), l)
-        self.assertIn(('g', 'Green'), l)
-        self.assertIn(('o', 'Light Orange'), l)
+        more_colours = list(MoreColours)
+        self.assertEqual(len(more_colours), 4)
+        self.assertIn(('r', 'Red'), more_colours)
+        self.assertIn(('b', 'Blueish'), more_colours)
+        self.assertIn(('g', 'Green'), more_colours)
+        self.assertIn(('o', 'Light Orange'), more_colours)
 
         # check gettr method
         self.assertEqual('Red', Colours.get_value('r'))

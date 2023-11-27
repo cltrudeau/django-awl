@@ -11,7 +11,7 @@ def common(session):
 @nox.session(python=["3.8", "3.9"])
 def test320(session):
     common(session)
-    session.install(f"django>=3.2,<4.0")
+    session.install("django>=3.2,<4.0")
     session.run("./load_tests.py", external=True)
 
 
@@ -22,7 +22,7 @@ def test320(session):
 @nox.session(python=["3.8", "3.9", "3.10", "3.11", "3.12"])
 def test410(session):
     common(session)
-    session.install(f"django>=4.1,<4.2")
+    session.install("django>=4.1,<4.2")
     session.run("./load_tests.py", external=True)
 
 
@@ -30,7 +30,7 @@ def test410(session):
 @nox.session(python=["3.8", "3.9", "3.10", "3.11", "3.12"])
 def test420(session):
     common(session)
-    session.install(f"django>=4.2,<4.3")
+    session.install("django>=4.2,<4.3")
     session.run("./load_tests.py", external=True)
 
 
