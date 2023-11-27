@@ -158,7 +158,7 @@ LOWER_WEB_COLOUR_MAP = {k.lower():v for k, v in WEB_COLOUR_MAP.items()}
 HEX_MATCH = re.compile(
     r"""                  # #fff or #FBF01B
     \#                   # starts with #
-    ([a-fA-F0-9]{3})     # excatly 3 hex digits
+    ([a-fA-F0-9]{3})     # exactly 3 hex digits
     $                    # and nothing more
     |                    # OR
     \#

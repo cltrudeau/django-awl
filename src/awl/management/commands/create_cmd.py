@@ -1,4 +1,4 @@
-# awl.managment.commands.create_cmd.py
+# awl.management.commands.create_cmd.py
 #
 import os
 

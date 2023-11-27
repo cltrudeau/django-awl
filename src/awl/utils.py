@@ -107,7 +107,7 @@ def get_obj_attr(obj, attr):
         <Address object at 105a79ac8>
 
     :param obj: 
-        Object to start the derference from
+        Object to start the dereference from
 
     :param attr:
         String name of attribute to return
