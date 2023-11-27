@@ -1,5 +1,6 @@
 # awl.decorators.py
-import logging, json
+import json
+import logging
 from functools import wraps
 
 from django.http import Http404

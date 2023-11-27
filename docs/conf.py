@@ -11,7 +11,7 @@
 # serve to show the default.
 
 import sys
-import shlex
+from datetime import datetime
 from pathlib import Path
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -19,11 +19,13 @@ from pathlib import Path
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+import django
+import awl
+
 SRC_DIR = Path(__file__).parent / '../src'
 SRC_DIR = SRC_DIR.resolve()
 sys.path.insert(0, str(SRC_DIR))
-import django
-from django.conf import settings
+from django.conf import settings  # noqa: E402
 settings.configure(
     BASE_DIR=str(SRC_DIR / 'awl'),
     INSTALLED_APPS=(
@@ -64,7 +66,6 @@ master_doc = 'index'
 # General information about the project.
 project = 'Awl'
 
-from datetime import datetime
 author = 'Christopher Trudeau'
 copyright = '2015-%s, %s' % (datetime.now().year, author)
 
@@ -73,7 +74,6 @@ copyright = '2015-%s, %s' % (datetime.now().year, author)
 # built documents.
 #
 # The short X.Y version.
-import awl
 version = awl.__version__
 
 # The full version, including alpha/beta/rc tags.

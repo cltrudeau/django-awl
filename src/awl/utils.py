@@ -84,7 +84,7 @@ def get_field_names(obj, ignore_auto=True, ignore_relations=True,
                 isinstance(field, OneToOneField)):
             # optimization is killing coverage measure, have to put no-op that
             # does something
-            a = 1; a
+            a = 1; a  # noqa: E702
             continue
 
         if field.name in exclude:

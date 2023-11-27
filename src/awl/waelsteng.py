@@ -4,7 +4,8 @@
 # module in order to handle some better grouping of items.  New things will
 # need to be explicitly added to docs/waelsteng.rst
 #
-import shutil, tempfile
+import shutil
+import tempfile
 from unittest import TestSuite
 
 from django.conf import settings
