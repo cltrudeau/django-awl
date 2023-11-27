@@ -77,11 +77,7 @@ def get_field_names(obj, ignore_auto=True, ignore_relations=True,
         if ignore_auto and isinstance(field, AutoField):
             continue
 
-        if ignore_relations and (isinstance(field, ForeignKey) or
-                isinstance(field, ManyToManyField) or
-                isinstance(field, ManyToOneRel) or
-                isinstance(field, OneToOneRel) or
-                isinstance(field, OneToOneField)):
+        if ignore_relations and (isinstance(field, (ForeignKey, ManyToManyField, ManyToOneRel, OneToOneField, OneToOneRel))):
             # optimization is killing coverage measure, have to put no-op that
             # does something
             a = 1; a
