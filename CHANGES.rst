@@ -155,12 +155,12 @@ Release Notes
 
 **0.17.1**
 
-* upgraded dependancies to a working version of screwdriver
+* upgraded dependencies to a working version of screwdriver
 * changed wheel build to be universal
 
 **0.17**
 
-* Removed dependancies on deprecated "wrench" library
+* Removed dependencies on deprecated "wrench" library
 
 **0.16**
 
@@ -174,9 +174,9 @@ Release Notes
 
 **0.14**
 
-* removed Django 1.8, 1.9 compatability (may still work, no longer tested)
-* added Django 1.11 compatability
-* added python 3.6 compatability
+* removed Django 1.8, 1.9 compatibility (may still work, no longer tested)
+* added Django 1.11 compatibility
+* added python 3.6 compatibility
 * added Choices object
     * easy way of creating django's tuple-of-tuple structure used in choices
       lists, etc.

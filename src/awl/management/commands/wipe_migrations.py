@@ -1,4 +1,4 @@
-# awl.managment.commands.wipe_migrations.py
+# awl.management.commands.wipe_migrations.py
 #
 import os
 

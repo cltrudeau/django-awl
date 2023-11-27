@@ -1,4 +1,4 @@
-# awl.managment.commands.print_setting.py
+# awl.management.commands.print_setting.py
 #
 # Takes the name of a django setting and prints the result to the screen. 
 

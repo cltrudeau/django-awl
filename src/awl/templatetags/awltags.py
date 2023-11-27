@@ -45,14 +45,14 @@ def getitem(dictionary, keyvar):
 def accessor(parser, token):
     """This template tag is used to do complex nested attribute accessing of
     an object.  The first parameter is the object being accessed, subsequent
-    paramters are one of: 
+    parameters are one of: 
 
     * a variable in the template context
     * a literal in the template context
     * either of the above surrounded in square brackets
 
     For each variable or literal parameter given a `getattr` is called on the
-    object, chaining to the next parameter.  For any sqaure bracket enclosed
+    object, chaining to the next parameter.  For any square bracket enclosed
     items the access is done through a dictionary lookup.
 
     Example::
