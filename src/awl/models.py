@@ -18,7 +18,7 @@ class Counter(TimeTrackModel):
         the database.
 
         :param name:
-            Name for a previously created ``Counter`` object 
+            Name for a previously created ``Counter`` object
         """
         with transaction.atomic():
             counter = Counter.objects.select_for_update().get(name=name)
@@ -50,7 +50,7 @@ class Lock(TimeTrackModel):
         the next commit is done.
 
         :param name:
-            Name for a previously created ``Lock`` object 
+            Name for a previously created ``Lock`` object
         """
         Lock.objects.select_for_update().get(name=name)
 
@@ -84,7 +84,7 @@ class _ChoicesType(type):
 
         # values defined in the class (not in parent) are defined in __dict__,
         # loop through them and update _choices_hash; this will override
-        # anything defined in a parent 
+        # anything defined in a parent
         for name in cls.__dict__.keys():
             value = getattr(cls, name)
             if name[0] == '_' or hasattr(value, '__call__') :
@@ -212,7 +212,7 @@ class QuerySetChain:
         subquerysets.
         """
         if type(index) is slice:
-            return list(islice(self._all(), index.start, index.stop, 
+            return list(islice(self._all(), index.start, index.stop,
                 index.step or 1))
         else:
             return next(islice(self._all(), index, index+1))

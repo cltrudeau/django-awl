@@ -1,7 +1,7 @@
 # awl.managment.commands.wipe_migrations.py
-#
-import os
+from pathlib import Path
 
+from django.apps import apps, AppConfig
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
@@ -9,26 +9,36 @@ from django.core.management.base import BaseCommand
 class Command(BaseCommand):
     """Searches through the INSTALLED_APP listing looking for any apps that
     are in the same base directory structure as the command and removes any
-    migration scripts belonging to them.""" 
+    migration scripts belonging to them."""
 
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
         self.help = self.__doc__
 
     def handle(self, *args, **options):
-        project_dir = settings.BASE_DIR
-        search_dir = os.path.abspath(os.path.dirname(project_dir))
+        for config in apps.get_app_configs():
+            if not isinstance(config, AppConfig):
+                # Ignore other config classes
+                continue
 
-        for app_name in settings.INSTALLED_APPS:
-            module = __import__(app_name)
-            filename = module.__file__
+            project_dir = str(settings.BASE_DIR)
+            if not config.path.startswith(project_dir):
+                # Ignore anything that isn't a subfolder of the project
+                continue
 
-            if filename.startswith(search_dir):
-                app_dir = os.path.abspath(os.path.dirname(filename))
-                migrations = os.path.join(app_dir, 'migrations')
-                if os.path.isdir(migrations):
-                    for filename in os.listdir(migrations):
-                        if filename.startswith('_'):
-                            continue
+            # Got here: config is AppConfig and a sub-folder of the project
+            dirpath = Path(config.path)
+            migrations = dirpath / "migrations"
+            if not migrations.exists():
+                continue
 
-                        os.remove(os.path.join(migrations, filename))
+            for path in migrations.iterdir():
+                if not path.is_file():
+                    # Ignore anything but files
+                    continue
+
+                if path.name.startswith("_"):
+                    # Ignore special files
+                    continue
+
+                path.unlink()

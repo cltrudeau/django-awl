@@ -2,4 +2,4 @@
 
 echo "============================================================"
 echo "== pyflakes =="
-pyflakes awl | grep -v migration
+pyflakes ../src/awl | grep -v migration

@@ -8,10 +8,10 @@ from awl.waelsteng import create_admin
 
 class Command(BaseCommand):
     """Creates a test admin user account by calling
-    :func:'awl.waelsteng.create_admin'"""
+    :func:`awl.waelsteng.create_admin`"""
 
     help = ('Creates a test admin user account by calling '
-        'awl.waelsteng.create_admin')
+        'awl.waelsteng.create_admin, using the default username and password')
 
     def handle(self, *args, **options):
         create_admin()

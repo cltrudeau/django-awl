@@ -1,9 +1,9 @@
 Waelsteng
 =========
-    [wel stæŋ]  / *noun* 
-    
-    1) literal: "death pole" or "slaugher pole"; 
-    2) Anglo Saxon tool for impailing enemies or those who had done wrong; 
+    [wel stæŋ]  / *noun*
+
+    1) literal: "death pole" or "slaugher pole";
+    2) Anglo Saxon tool for impailing enemies or those who had done wrong;
     3) A collection of django testing tools
 
 Testing Django Views
@@ -57,4 +57,4 @@ database is created.  This hook can be used to create test data.
 Shortcut test labels (using `waelstow.find_shortcut_tests()
 <https://waelstow.readthedocs.io/en/latest/#waelstow.find_shortcut_tests>`_)
 are supported by this runner.  Any label that starts with "=" is checked
-against all tests for substring matches.  
+against all tests for substring matches.

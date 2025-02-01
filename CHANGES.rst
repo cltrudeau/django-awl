@@ -2,6 +2,18 @@
 Release Notes
 #############
 
+**1.8.3**
+
+* 2025/01/31
+* Removed old Django versions from testing (3.2, 4.0, 4.1)
+* Add new Django versions to testing (5.0, 5.1)
+* Finished moving from setup.cfg to pyproject.toml
+* Minor fixes to documentation
+* Re-wrote the wipe_migrations command to use Django internals instead of the
+  hackish processing of INSTALLED_APPS
+* Changed how the test harness works, moving everything into TestProject,
+  cleaner and stops the linger db files from kicking around
+
 **1.8.2**
 
 * 2023/11/20

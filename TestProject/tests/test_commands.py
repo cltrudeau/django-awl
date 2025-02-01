@@ -41,7 +41,7 @@ class CommandTests(TestCase):
             migrate2.touch()
 
             apps = list(settings.INSTALLED_APPS)
-            apps.append("awl." + app_name)
+            apps.append(app_name)
 
             with override_settings(INSTALLED_APPS=apps):
                 call_command('wipe_migrations')

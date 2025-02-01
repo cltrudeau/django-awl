@@ -1,3 +1,53 @@
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-awl"
+description = "Collection of Django utilities"
+authors = [{name="Christopher Trudeau", email="ctrudeau+pypi@arsensa.com"}]
+readme = "README.rst"
+license = {file="LICENSE"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dynamic = ["version"]
+dependencies = [
+    "Django>=4.2,<6",
+    "logthing>=1.0.0",
+    "screwdriver>=0.15.0",
+    "waelstow>=0.11.0",
+]
+
+[project.optional-dependencies]
+build = ["build==1.2.2.post1", "twine==6.1.0"]
+dev = [
+    "Django==5.1.5",
+    "context-temp==0.11.2",
+    "coverage==7.6.10",
+    "pudb==2024.1",
+    "pyflakes==3.2.0",
+    "Sphinx==8.1.3",
+    "sphinx-rtd-theme==3.0.2",
+    "nox==2024.10.9",
+    "waelstow==0.11.1",
+]
+
+[project.urls]
+repository = "https://github.com/cltrudeau/django-awl"
+documentation = "https://django-awl.readthedocs.io/en/latest/index.html"
+
+[tool.setuptools.dynamic]
+version = {attr = "awl.__version__"}

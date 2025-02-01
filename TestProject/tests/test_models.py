@@ -15,7 +15,6 @@ class ModelsTest(TestCase):
 
     def test_lock(self):
         # not much to test here except that it doesn't blow up
-        breakpoint()
         Lock.objects.create(name='foo')
         Lock.lock_until_commit('foo')
 

@@ -1,14 +1,7 @@
 from django.contrib import admin
 
 from app.models import Writer, Show, Episode, Station
-from awl.tests.models import Author, Book, Chapter
 from awl.admintools import fancy_modeladmin
-
-# remove the awl.test admin files, they confuse things
-admin.site.unregister(Author)
-admin.site.unregister(Book)
-admin.site.unregister(Chapter)
-
 
 @admin.register(Writer)
 class WriterAdmin(admin.ModelAdmin):

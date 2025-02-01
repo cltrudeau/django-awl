@@ -12,6 +12,7 @@
 *~
 .coverage*
 htmlcov/
+TestProject/htmlcov/
 foo.py
 debug.log
 db.sqlite3
