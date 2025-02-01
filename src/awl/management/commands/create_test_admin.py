@@ -1,4 +1,4 @@
-# awl.managment.commands.create_test_admin.py
+# awl.management.commands.create_test_admin.py
 #
 # Creates an admin user, done here so it can be automated as part of the reset
 # script

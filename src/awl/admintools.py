@@ -510,7 +510,7 @@ class FancyModelAdmin(ModelAdmin):
         the object that was clicked to get there.
 
         :param set_name:
-            Name of the attribute on the row object that is the foriegn key
+            Name of the attribute on the row object that is the foreign key
             set. For example "grade_set" on a Student object that is
             associated with a Grade object through Grade's FK on Student.
 

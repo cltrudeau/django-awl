@@ -1,4 +1,4 @@
-# awl.managment.commands.run_script.py
+# awl.management.commands.run_script.py
 #
 # runs the python script given on the command line within the Django env
 

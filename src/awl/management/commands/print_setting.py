@@ -1,4 +1,4 @@
-# awl.managment.commands.print_setting.py
+# awl.management.commands.print_setting.py
 #
 # Takes the name of a django setting and prints the result to the screen. 
 
@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         value = getattr(settings, options['name'])
-        if isinstance(value, list) or isinstance(value, tuple):
+        if isinstance(value, (list, tuple)):
             value = ' '.join(value)
 
         print(value)

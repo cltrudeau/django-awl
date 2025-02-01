@@ -1,4 +1,7 @@
-import os, tempfile, shutil, unittest
+import os
+import shutil
+import tempfile
+import unittest
 from unittest import mock
 from django.contrib import messages
 from django.test import TestCase, override_settings

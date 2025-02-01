@@ -77,14 +77,10 @@ def get_field_names(obj, ignore_auto=True, ignore_relations=True,
         if ignore_auto and isinstance(field, AutoField):
             continue
 
-        if ignore_relations and (isinstance(field, ForeignKey) or
-                isinstance(field, ManyToManyField) or
-                isinstance(field, ManyToOneRel) or
-                isinstance(field, OneToOneRel) or
-                isinstance(field, OneToOneField)):
+        if ignore_relations and (isinstance(field, (ForeignKey, ManyToManyField, ManyToOneRel, OneToOneField, OneToOneRel))):
             # optimization is killing coverage measure, have to put no-op that
             # does something
-            a = 1; a
+            a = 1; a  # noqa: E702
             continue
 
         if field.name in exclude:
@@ -107,7 +103,7 @@ def get_obj_attr(obj, attr):
         <Address object at 105a79ac8>
 
     :param obj: 
-        Object to start the derference from
+        Object to start the dereference from
 
     :param attr:
         String name of attribute to return
