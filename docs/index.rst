@@ -10,6 +10,7 @@ Contents
 
    absmodels
    admintools
+   appmanage
    context
    css_colours
    decorators

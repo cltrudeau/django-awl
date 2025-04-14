@@ -310,6 +310,12 @@ class WRunner(DiscoverRunner):
 
         if test_labels:
             # just do the test cases for the given labels
+            #
+            # This is a hack, find_shortcut_tests() assumes all labels are
+            # shortcut labels and removes the leading character, assuming it
+            # is a "=" or ":", then looks for name matches. If our labels are
+            # fully qualified, they'll still work as a shortcut, as they'll
+            # match the startswith() clause
             shortcut_tests = find_shortcut_tests(suite, test_labels)
             suite = TestSuite(shortcut_tests)
 

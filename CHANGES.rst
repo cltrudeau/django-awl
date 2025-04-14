@@ -2,6 +2,13 @@
 Release Notes
 #############
 
+**1.9.0**
+
+* 2025/04/14
+* New feature for creating a manage.py-like script for standalone apps
+* Add "wtest" command that uses the WRunner to run tests
+* Add Django 5.2 to testing
+
 **1.8.3**
 
 * 2025/01/31
@@ -12,7 +19,7 @@ Release Notes
 * Re-wrote the wipe_migrations command to use Django internals instead of the
   hackish processing of INSTALLED_APPS
 * Changed how the test harness works, moving everything into TestProject,
-  cleaner and stops the linger db files from kicking around
+  cleaner and stops the longer db files from kicking around
 
 **1.8.2**
 
